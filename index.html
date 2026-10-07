@@ -5,149 +5,247 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>ANGO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=DotGothic16&family=M+PLUS+1+Code:wght@500;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0b0b0c">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
-:root{--bg:#12151c;--panel:#1c212c;--panel2:#252b38;--line:#333b4c;--text:#eef1f6;--sub:#9aa4b5;--key:#f2b134;--ok:#37c9a6;--ng:#ff6b6b;--send:#6aa8ff;--recv:#c58bff;--paper:#f3ead6;--ink:#2a2418}
+:root{
+ --bg:#0b0b0c;--panel:#141415;--panel2:#1b1b1d;--line:#2a2a2d;--line2:#3a3a3e99;
+ --text:#ececec;--sub:#8a8a8f;
+ --key:#f2f2f2;--key-rgb:242 242 242;
+ --ok:#3ee894;--ok-rgb:62 232 148;
+ --ng:#ff5268;--ng-rgb:255 82 104;
+ --send:#4d9bff;--send-rgb:77 155 255;
+ --recv:#b77bff;--recv-rgb:183 123 255;
+ --paper:#0e0e0f;--paper2:#0e0e0f;--ink:#f5f5f5;
+ --f-body:"Zen Kaku Gothic New",system-ui,sans-serif;
+ --f-cipher:"DotGothic16","M PLUS 1 Code",monospace;
+ --f-disp:"Space Grotesk","Zen Kaku Gothic New",sans-serif;
+ --f-mono:"IBM Plex Mono","Zen Kaku Gothic New",monospace;
+}
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text)}
-body{font-family:"Zen Maru Gothic",system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
-#app{max-width:520px;margin:0 auto;padding:12px 16px 48px}
-button{font:inherit;color:inherit;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px 12px;cursor:pointer}
+html{background:var(--bg)}
+body{margin:0;color:var(--text);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent;min-height:100vh;
+ background:
+  radial-gradient(900px 500px at 50% -160px,rgb(255 255 255/.05),transparent 70%),
+  repeating-linear-gradient(0deg,rgb(var(--key-rgb)/.035) 0 1px,transparent 1px 28px),
+  repeating-linear-gradient(90deg,rgb(var(--key-rgb)/.035) 0 1px,transparent 1px 28px),
+  var(--bg);background-attachment:fixed}
+#app{max-width:520px;margin:0 auto;padding:14px 16px 56px}
+::selection{background:rgb(var(--key-rgb)/.35)}
+button{font:inherit;color:inherit;border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:8px 12px;cursor:pointer;transition:background .15s,border-color .15s,transform .08s}
+button:not(:disabled):active{transform:translateY(1px)}
 button:disabled{cursor:default}
-.primary{background:var(--key);color:#1a1404;border-color:transparent;font-weight:700}
-.primary:disabled{opacity:.35}
-.big{width:100%;padding:13px;font-size:16px;margin-top:10px}
-.ghost{background:transparent}
+.primary:not(:disabled):hover{background:#fff}
+.primary{background:#f0f0f0;color:#0b0b0c;border-color:#fff;font-weight:900;letter-spacing:.08em;box-shadow:none}
+.primary:disabled{opacity:.3;box-shadow:none}
+.big{width:100%;padding:14px;font-size:16px;margin-top:10px}
+.big:not(.primary){background:transparent;border-color:var(--line2)}
+.big:not(.primary):not(:disabled):hover{border-color:rgb(var(--key-rgb)/.6)}
+.ghost{background:transparent;border-color:var(--line)}
 .small{font-size:12px;padding:5px 10px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:12px}
-h3{margin:0 0 8px;font-size:13px;color:var(--sub);font-weight:700;letter-spacing:.05em;display:flex;justify-content:space-between;align-items:center}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;box-shadow:inset 0 1px 0 rgb(255 255 255/.03),0 10px 30px -18px #000}
+h3{margin:0 0 10px;padding-left:9px;border-left:2px solid var(--key);font-size:12px;line-height:1.2;color:var(--sub);font-weight:700;letter-spacing:.14em;display:flex;justify-content:space-between;align-items:center}
 .sub{color:var(--sub);font-size:12.5px}
 .center{text-align:center}
-.top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.logo{font-weight:900;font-size:18px;letter-spacing:.06em}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:4px}
+.logo{font-family:var(--f-disp);font-weight:900;font-size:22px;letter-spacing:.2em;color:var(--key);line-height:1;}
 .logo small{font-size:11px;color:var(--sub);font-weight:500}
-.hero{text-align:center;padding:40px 0 16px}
-.hero .logo{font-size:44px;letter-spacing:.18em}
-.code{font-size:40px;font-weight:900;letter-spacing:.2em;color:var(--key)}
-input{width:100%;font:inherit;font-size:16px;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);margin-top:4px}
-label{display:block;margin-top:12px;font-size:13px;color:var(--sub)}
+.hero{text-align:center;padding:52px 0 18px;position:relative}
+.hero .logo{font-size:64px;letter-spacing:.18em;padding-left:.18em;}
+.hero .cls{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.32em;color:var(--sub);margin-top:6px}
+.hero .tagline{margin-top:14px;font-size:14px;letter-spacing:.08em}
+.stamp{position:absolute;top:40px;right:calc(50% - 160px);transform:rotate(12deg);border:2.5px solid var(--ng);color:var(--ng);font-weight:900;font-size:15px;letter-spacing:.2em;padding:2px 6px 2px 9px;border-radius:4px;opacity:.85;mix-blend-mode:screen}
+.code{font-family:var(--f-disp);font-size:46px;font-weight:900;letter-spacing:.24em;padding-left:.24em;color:var(--key);line-height:1.1}
+input{width:100%;font:inherit;font-size:16px;padding:12px;border-radius:8px;border:1px solid var(--line);background:#0f0f10;color:var(--text);margin-top:5px;outline:none;transition:border-color .15s}
+input:focus{border-color:rgb(var(--key-rgb)/.7)}
+label{display:block;margin-top:12px;font-size:12px;color:var(--sub);letter-spacing:.1em}
 .err{color:var(--ng);font-size:13px;margin-top:10px;text-align:center;min-height:1.5em}
 .note{color:var(--sub);font-size:12px;margin-top:8px}
 .ic{width:1em;height:1em;vertical-align:-.15em;flex:none}
 .timer{display:inline-flex;align-items:center;gap:4px;font-weight:900;font-variant-numeric:tabular-nums;background:var(--panel2);padding:3px 10px;border-radius:99px}
 .timer.hurry{color:var(--ng)}
-.tag{font-size:11px;padding:0 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.tag{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:4px;border:1px solid currentColor;white-space:nowrap;letter-spacing:.06em;line-height:1.5}
 .t-send{color:var(--send)}.t-recv{color:var(--recv)}.t-inter{color:var(--sub)}
-.pair{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;margin-top:8px}
-.role{font-size:17px;font-weight:900}
-.keybox{display:flex;align-items:center;gap:8px;background:rgba(242,177,52,.1);border:1px solid rgba(242,177,52,.4);border-radius:10px;padding:8px 10px;margin-top:8px;color:var(--key)}
+.pair{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px}
+.role{font-size:18px;font-weight:900;letter-spacing:.04em}
+.keybox{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgb(var(--key-rgb)/.14),rgb(var(--key-rgb)/.04));border:1px solid rgb(var(--key-rgb)/.35);border-left:3px solid var(--key);border-radius:8px;padding:9px 12px;margin-top:10px;color:var(--key)}
 .keybox b{font-size:16px}
-.keybox .sub{color:#c9a45a}
-.tgbox{display:flex;align-items:center;gap:8px;background:rgba(106,168,255,.1);border:1px solid rgba(106,168,255,.4);border-radius:10px;padding:8px 10px;margin-top:6px;color:var(--send)}
-.tgbox b{font-size:18px}
-.phase{border-radius:14px;padding:12px 14px;margin-top:12px;background:var(--panel2);border:1px solid var(--line)}
-.phase.okbg{border-color:var(--ok);background:rgba(55,201,166,.1)}
-.phase.ngbg{border-color:var(--ng);background:rgba(255,107,107,.08)}
-.phase .head{font-weight:900;font-size:16px;display:flex;align-items:center;gap:6px}
-.cipher{font-size:30px;font-weight:900;letter-spacing:.18em;text-align:center;background:var(--paper);color:var(--ink);border-radius:12px;padding:8px 10px;margin:8px 0;word-break:break-all}
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.chip{font-size:12px;padding:2px 9px;border-radius:99px;background:var(--panel);border:1px solid var(--line);display:inline-flex;align-items:center;gap:4px}
-.chip.done{border-color:var(--ok);color:var(--ok)}
+.keybox .sub{color:var(--sub)}
+.tgbox{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgb(var(--send-rgb)/.14),rgb(var(--send-rgb)/.04));border:1px solid rgb(var(--send-rgb)/.35);border-left:3px solid var(--send);border-radius:8px;padding:9px 12px;margin-top:8px;color:var(--send)}
+.tgbox b{font-size:19px;letter-spacing:.04em}
+.phase{border-radius:12px;padding:14px;margin-top:12px;background:var(--panel2);border:1px solid var(--line)}
+.phase.okbg{border-color:rgb(var(--ok-rgb)/.5);background:linear-gradient(180deg,rgb(var(--ok-rgb)/.10),var(--panel) 70%)}
+.phase.ngbg{border-color:rgb(var(--ng-rgb)/.5);background:linear-gradient(180deg,rgb(var(--ng-rgb)/.09),var(--panel) 70%)}
+.phase .head{font-weight:900;font-size:16px;display:flex;align-items:center;gap:6px;letter-spacing:.03em}
+.cipher{font-family:var(--f-cipher);font-size:30px;font-weight:900;letter-spacing:.18em;text-align:center;background:var(--paper);color:var(--ink);border:1px solid rgb(var(--key-rgb)/.35);border-radius:6px;padding:8px 10px;margin:8px 0;word-break:break-all;}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.chip{font-size:12px;padding:2px 9px 2px 3px;border-radius:99px;background:var(--panel);border:1px solid var(--line);display:inline-flex;align-items:center;gap:4px;color:var(--sub)}
+.chip.done{border-color:rgb(var(--ok-rgb)/.6);color:var(--ok)}
 .words{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.word{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50px;padding:8px 2px 5px;min-width:0;background:var(--panel2);border-radius:10px}
+.word{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:52px;padding:8px 2px 6px;min-width:0;background:#18181a;border-color:#28282b;border-radius:7px}
 .word:disabled{color:var(--text)}
+.word:not(:disabled):hover{border-color:rgb(var(--key-rgb)/.5)}
 .word .w{font-weight:700;font-size:12.5px;line-height:1.2;text-align:center;word-break:break-all}
-.word .r{font-size:8.5px;word-break:break-all;text-align:center;color:var(--sub);line-height:1.2;margin-top:1px}
-.word.sel{border-color:var(--key);background:rgba(242,177,52,.2)}
-.word.chosen{border-color:var(--ok);background:rgba(55,201,166,.16)}
-.word.past{opacity:.4}
-.word.wrong .w{text-decoration:line-through;text-decoration-color:var(--ng);opacity:.55}
-.word.target{box-shadow:0 0 0 2px var(--send) inset;border-color:var(--send)}
+.word .r{font-size:8.5px;word-break:break-all;text-align:center;color:var(--sub);line-height:1.2;margin-top:2px}
+.word.sel{border-color:var(--key);background:rgb(var(--key-rgb)/.18);box-shadow:0 0 0 1px var(--key) inset}
+.word.chosen{border-color:var(--ok);background:rgb(var(--ok-rgb)/.14)}
+.word.past{opacity:.35}
+.word.wrong{background:#111112}
+.word.wrong .w{text-decoration:line-through;text-decoration-color:var(--ng);text-decoration-thickness:2px;opacity:.45}
+.word.target{box-shadow:0 0 0 2px var(--send) inset;border-color:var(--send);background:rgb(var(--send-rgb)/.12)}
 .badge{position:absolute;top:1px;right:5px;font-style:normal;font-size:9px;color:var(--sub);font-weight:700}
 .badge.tg{color:var(--send)}
 .kana{display:grid;grid-template-columns:repeat(11,1fr);gap:3px}
-.kt{aspect-ratio:1;padding:0;border-radius:6px;background:var(--paper);color:var(--ink);border:none;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;min-width:0}
-.kt.empty{background:transparent}
-.kt.used{background:#262c38;color:#4a5365;text-decoration:line-through}
-.kt.inbuf{background:var(--key);color:#1a1404}
-.buf{min-height:54px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;background:var(--paper);color:var(--ink);border-radius:12px;padding:8px;font-size:28px;font-weight:900;letter-spacing:.14em;margin-bottom:8px}
-.ph{font-size:14px;color:#9a8f78;letter-spacing:0;font-weight:500}
-.ctrl{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1.7fr;gap:6px;margin-top:8px}
-.ctrl button{padding:9px 0;font-weight:700}
+.kt{aspect-ratio:1;padding:0;border-radius:4px;background:#1c1c1e;color:#e6e6e6;border:1px solid #303034;font-family:var(--f-cipher);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;min-width:0;box-shadow:none}
+.kt:not(:disabled):hover{border-color:var(--key)}
+.kt:not(:disabled):active{transform:scale(.94)}
+.kt.empty{background:transparent;box-shadow:none;border:none}
+.kt.used{background:#0f0f10;color:#38383c;border-color:#1a1a1c;text-decoration:line-through;box-shadow:none}
+.kt.inbuf{background:#f0f0f0;color:#0b0b0c;border-color:#fff}
+.buf{min-height:58px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;background:var(--paper);background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgb(var(--key-rgb)/.04) 3px 4px);color:var(--ink);border:1px solid rgb(var(--key-rgb)/.4);border-radius:6px;padding:8px;font-family:var(--f-cipher);font-size:30px;font-weight:700;letter-spacing:.16em;margin-bottom:10px;box-shadow:inset 0 0 24px rgb(var(--key-rgb)/.08)}
+.ph{font-family:var(--f-body);font-size:13px;color:#55555a;letter-spacing:.06em;font-weight:500}
+.ctrl{display:grid;grid-template-columns:1fr 1fr 1fr 2fr;gap:6px;margin-top:10px}
+.ctrl button{padding:10px 0;font-weight:700}
 .hround{border-top:1px dashed var(--line);padding:8px 0 4px}
 .hround:first-of-type{border-top:none;padding-top:0}
 .hhead{font-weight:700;font-size:13px}
 .hatt{margin-top:6px;font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
-.cchip{display:inline-block;background:var(--paper);color:var(--ink);font-weight:900;border-radius:6px;padding:0 8px;letter-spacing:.1em;font-size:14px}
+.cchip{display:inline-block;background:var(--paper);color:var(--ink);border:1px solid rgb(var(--key-rgb)/.35);font-family:var(--f-cipher);font-weight:700;border-radius:3px;padding:0 8px;letter-spacing:.12em;font-size:14px}
 .ok{color:var(--ok)}.ng{color:var(--ng)}.hid{color:var(--key)}
-.plist{display:flex;flex-direction:column;gap:7px}
-.pl{display:flex;align-items:center;gap:8px;font-size:14px}
+.plist{display:flex;flex-direction:column;gap:2px}
+.pl{display:flex;align-items:center;gap:9px;font-size:14px;padding:5px 0;border-bottom:1px solid #202022}
+.pl:last-child{border-bottom:none}
 .pl .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pl.off{opacity:.45}
-.pts{font-weight:900;font-variant-numeric:tabular-nums;min-width:2.5em;text-align:right}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:10}
-.sheet{background:var(--panel);width:100%;max-width:520px;max-height:85vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px 16px 28px}
+.pl.off{opacity:.4}
+.pts{font-family:var(--f-disp);font-size:17px;font-weight:900;font-variant-numeric:tabular-nums;min-width:2em;text-align:right;color:var(--key)}
+.modal{position:fixed;inset:0;background:rgb(4 6 9/.72);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.sheet{background:var(--panel);width:100%;max-width:520px;max-height:85vh;overflow:auto;border-radius:14px 14px 0 0;border-top:2px solid var(--key);padding:18px 16px 28px}
 .sheet ul{padding-left:1.2em;margin:6px 0}
-.sheet li{margin:5px 0;font-size:14px}
+.sheet li{margin:6px 0;font-size:14px}
+.sheet li::marker{color:var(--key)}
 .keys{display:flex;flex-direction:column;gap:6px}
-.keyitem{text-align:left;display:flex;gap:8px;align-items:baseline;width:100%}
-.keyitem .no{color:var(--sub);font-size:11px;min-width:1.6em}
+.keyitem{text-align:left;display:flex;gap:8px;align-items:baseline;width:100%;background:#18181a;border-color:#28282b}
+.keyitem .no{font-family:var(--f-mono);color:var(--sub);font-size:11px;min-width:1.6em}
 .keyitem .ex{color:var(--sub);font-size:11.5px;margin-left:auto;white-space:nowrap}
-.keyitem.sel{border-color:var(--key);background:rgba(242,177,52,.18)}
+.keyitem.sel{border-color:var(--key);background:rgb(var(--key-rgb)/.16)}
 .keyitem.ans{border-color:var(--ok)}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ng);color:#fff;padding:8px 14px;border-radius:10px;z-index:20;font-size:13px;max-width:90vw}
+.sheet .keyitem{background:transparent}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1d1515;border:1px solid var(--ng);color:#f3d6d4;padding:9px 14px;border-radius:8px;z-index:20;font-size:13px;max-width:90vw;box-shadow:0 10px 30px -10px #000}
 table{width:100%;border-collapse:collapse;font-size:13px}
-td,th{padding:7px 3px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{color:var(--sub);font-weight:500;font-size:11.5px}
-td.num{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}
-.bigres{font-size:22px;font-weight:900;text-align:center}
+td,th{padding:8px 3px;border-bottom:1px solid #202022;text-align:left;vertical-align:top}
+th{color:var(--sub);font-weight:500;font-size:11px;letter-spacing:.1em}
+td.num{text-align:right;font-family:var(--f-disp);font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+.bigres{font-size:24px;font-weight:900;text-align:center;letter-spacing:.08em}
 .foot{margin-top:18px;text-align:center}
-.ktag{font-size:10px;font-weight:700;padding:0 6px;border-radius:5px;flex:none;align-self:center;white-space:nowrap}
-.kt-m{background:rgba(106,168,255,.18);color:var(--send)}
-.kt-i{background:rgba(55,201,166,.18);color:var(--ok)}
-.sticky{position:sticky;top:0;z-index:6;margin:10px -16px 0;padding:8px 16px 10px;background:rgba(18,21,28,.97);border-bottom:1px solid var(--line);box-shadow:0 6px 14px rgba(0,0,0,.35)}
+.cipher,.kt,.buf,.cchip,.sk-cipher,.revived b{font-weight:400!important;font-synthesis:none}
+.buf .ph{font-weight:500!important}
+.setrow{display:flex;align-items:center;gap:12px}
+.setb{width:40px;height:40px;padding:0;font-size:20px;font-weight:700;border-radius:50%}
+.setn{font-family:var(--f-disp);font-size:34px;min-width:1.4em;text-align:center}
+.setq{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.setq .pk{padding:4px 12px}
+.final-hero{text-align:center;padding:26px 0 8px}
+.final-title{font-size:28px;font-weight:900;letter-spacing:.2em;margin-top:6px}
+.podium{display:flex;justify-content:center;gap:18px;margin:16px 0 6px;flex-wrap:wrap}
+.pod1{display:flex;flex-direction:column;align-items:center;gap:6px}
+.pod1 b{font-size:16px}
+.pod1 .pts{font-size:30px;min-width:0;text-align:center}
+.av.xl{width:84px;height:84px;box-shadow:0 0 0 3px var(--key)}
+.rkn{font-family:var(--f-disp);font-weight:700;width:1.6em;text-align:center;color:var(--sub)}
+.pl.rk1 .rkn{color:var(--key)}
+.tblwrap{overflow-x:auto}
+.settbl td,.settbl th{white-space:nowrap;padding:6px 6px}
+.settbl td.num{font-size:15px}
+.settbl td.t-send{color:var(--send)}.settbl td.t-recv{color:var(--recv)}
+.rules .lead{font-size:14.5px;line-height:1.7;margin:2px 0 12px;padding:10px 12px;background:var(--panel2);border-radius:8px}
+.rsec{margin-top:12px}
+.rh{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--sub);margin-bottom:4px}
+.rules ul,.rules ol{padding-left:1.3em;margin:0}
+.rules li{margin:4px 0;font-size:13.5px;line-height:1.55}
+.rules ul li .tag{margin-right:4px}
+.stats{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.strow{display:grid;grid-template-columns:1fr auto 48px;align-items:center;gap:4px 10px;padding:10px 12px;background:var(--panel2);border-radius:8px}
+.stl{display:flex;flex-direction:column;font-weight:700;font-size:14px}
+.stl .sub{font-weight:400;font-size:11px}
+.stv b{font-family:var(--f-disp);font-size:24px}
+.stp{font-family:var(--f-disp);font-weight:700;font-size:16px;text-align:right}
+.stbar{grid-column:1/-1;height:4px;background:#2a2a2d;border-radius:99px;overflow:hidden}
+.stbar i{display:block;height:100%;background:var(--key)}
+.chkrow{display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14px;cursor:pointer;position:relative}
+.chkrow input{position:absolute;opacity:0;pointer-events:none}
+.chkmark{width:22px;height:22px;border-radius:5px;border:1.5px solid #5a5a60;display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:1px;color:#0b0b0c}
+.chkmark.on{background:var(--key);border-color:var(--key)}
+.qwerty{display:flex;flex-direction:column;gap:5px;align-items:center}
+.qrow{display:grid;gap:4px;width:100%}
+.qrow.r0{grid-template-columns:repeat(10,1fr)}
+.qrow.r1{grid-template-columns:repeat(9,1fr);width:90%}
+.qrow.r2{grid-template-columns:repeat(7,1fr);width:70%}
+.kt.qk{aspect-ratio:auto;height:44px;font-size:18px}
+.ctrl.ctrl-a{grid-template-columns:1fr 1.4fr}
+.ctrl.ctrl-a button{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.buf.alpha{letter-spacing:.22em}
+.moderow{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.seg button{display:flex;flex-direction:column;align-items:center;padding:8px 4px;font-weight:700;font-size:13px;background:transparent}
+.seg button small{font-weight:400;font-size:10.5px;color:var(--sub)}
+.seg button.on{background:#f0f0f0;color:#0b0b0c;border-color:#fff}
+.seg button.on small{color:#555}
+.netbar{position:fixed;left:0;right:0;top:0;z-index:30;background:var(--ng);color:#fff;text-align:center;font-size:13px;font-weight:700;padding:7px 10px;letter-spacing:.04em;animation:nb 1.2s ease-in-out infinite alternate}
+@keyframes nb{to{opacity:.75}}
+.kpc{padding:11px 12px;align-items:center}
+.kpc:hover{border-color:rgb(var(--key-rgb)/.6);background:rgb(var(--key-rgb)/.08)}
+.kpn{display:flex;flex-direction:column;gap:1px}
+.kpn b{font-size:15px}
+.rmbot{padding:3px 6px;font-size:12px;color:var(--ng);background:transparent;border-color:transparent;line-height:1}
+.ktag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;flex:none;align-self:center;white-space:nowrap;letter-spacing:.06em}
+.kt-m{background:rgb(var(--send-rgb)/.16);color:var(--send)}
+.kt-i{background:rgb(var(--ok-rgb)/.16);color:var(--ok)}
+.sticky{position:sticky;top:0;z-index:6;margin:10px -16px 0;padding:10px 16px 12px;background:rgb(11 11 12/.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);box-shadow:0 10px 24px -12px #000}
 .sk-row{display:flex;align-items:center;gap:12px}
 .sk-ci{flex:1;min-width:0}
-.sk-lb{font-size:11px;color:var(--sub);margin-bottom:2px}
-.sk-cipher{font-size:30px;font-weight:900;letter-spacing:.16em;background:var(--paper);color:var(--ink);border-radius:10px;padding:4px 10px;text-align:center;word-break:break-all;line-height:1.3}
-.sk-kg{font-size:20px;font-weight:900;color:var(--key)}
-.sk-time{width:78px;height:78px;border-radius:50%;border:5px solid var(--key);display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1;background:var(--panel)}
-.sk-time span{font-size:36px;font-weight:900;font-variant-numeric:tabular-nums}
-.sk-time small{font-size:10px;color:var(--sub);margin-top:2px}
-.sk-time.hurry{border-color:var(--ng);color:var(--ng);animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(1.08)}}
-.sk-bar{height:7px;background:var(--panel2);border-radius:99px;margin-top:8px;overflow:hidden}
+.sk-lb{font-size:10.5px;color:var(--sub);margin-bottom:4px;letter-spacing:.24em}
+.sk-cipher{font-family:var(--f-cipher);font-size:30px;font-weight:700;letter-spacing:.18em;background:var(--paper);background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgb(var(--key-rgb)/.05) 3px 4px);color:var(--ink);border:1px solid rgb(var(--key-rgb)/.45);border-radius:5px;padding:4px 10px;text-align:center;word-break:break-all;line-height:1.3;box-shadow:0 6px 16px -8px #000}
+.sk-kg{font-size:19px;font-weight:900;color:var(--key);letter-spacing:.04em}
+.sk-time{width:78px;height:78px;border-radius:50%;border:3px solid var(--key);display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1;background:#111112;box-shadow:none}
+.sk-time span{font-family:var(--f-disp);font-size:32px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--text)}
+.sk-time small{font-size:9.5px;color:var(--sub);margin-top:1px;letter-spacing:.2em}
+.sk-time.hurry{border-color:var(--ng);box-shadow:none;animation:pulse 1s ease-in-out infinite}
+.sk-time.hurry span{color:var(--ng)}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.sk-bar{height:4px;background:#1f1f22;border-radius:99px;margin-top:10px;overflow:hidden}
 .sk-bar i{display:block;height:100%;width:100%;background:var(--key);transition:width .2s linear}
 .sticky.hurry .sk-bar i{background:var(--ng)}
 .sk-res{display:flex;flex-direction:column;align-items:center;font-size:30px;flex:none;width:78px}
-.sk-res small{font-size:11px;font-weight:700}
-.pkrow{display:flex;align-items:flex-start;gap:8px;margin-top:8px;font-size:14px}
+.sk-res.ok{color:var(--ok)}.sk-res.ng{color:var(--ng)}
+.sk-res small{font-size:11px;font-weight:700;letter-spacing:.06em}
+.pkrow{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:14px}
 .pkrow>.tag{margin-top:6px}
 .pkchips{display:flex;flex-wrap:wrap;gap:5px}
-.pk{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;padding:4px 10px 4px 5px;border-radius:99px}
+.pk{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;padding:3px 10px 3px 3px;border-radius:99px;background:#18181a}
 .pk:first-child{padding-left:10px}
-.pk.on{border-color:var(--key);background:rgba(242,177,52,.2);color:var(--key)}
-.pk:disabled{opacity:.3}
-.av{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#2e3546;flex:none;overflow:hidden}
-.av.md{width:30px;height:30px}.av.lg{width:44px;height:44px}
+.pk.on{border-color:var(--key);background:rgb(var(--key-rgb)/.16);color:var(--key)}
+.pk:disabled{opacity:.25}
+.av{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#222225;flex:none;overflow:hidden;box-shadow:0 0 0 1px #333337}
+.av.md{width:30px;height:30px}.av.lg{width:46px;height:46px;box-shadow:0 0 0 2px rgb(var(--key-rgb)/.35)}
 .avs{width:100%;height:100%;display:block}
-.who{display:inline-flex;align-items:center;gap:4px}
-.lround{border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-top:8px;background:var(--panel2)}
+.who{display:inline-flex;align-items:center;gap:5px}
+.lround{border:1px solid var(--line);border-radius:10px;padding:10px 11px;margin-top:10px;background:#111112}
 .lround:first-child{margin-top:0}
-.lround.done{opacity:.85}
-.lrh{display:flex;align-items:center;gap:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-.lrno{font-weight:900;font-size:12px;background:var(--key);color:#1a1404;border-radius:6px;padding:0 7px}
+.lround.done{opacity:.8}
+.lrh{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.lrno{font-family:var(--f-mono);font-weight:600;font-size:11px;background:var(--key);color:#0b0b0c;border-radius:3px;padding:1px 6px;letter-spacing:.06em}
 .lrt{font-size:15px}
-.lrc{margin-left:auto;font-size:11.5px;color:var(--sub)}
-.latt{padding:8px 0 4px;border-bottom:1px dashed var(--line)}
+.lrc{margin-left:auto;font-size:11px;color:var(--sub);letter-spacing:.06em}
+.latt{padding:9px 0 5px;border-bottom:1px dashed #29292c}
 .latt:last-child{border-bottom:none}
 .lah{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.lno{width:18px;height:18px;border-radius:50%;border:1px solid var(--sub);color:var(--sub);font-size:10.5px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.lno{width:18px;height:18px;border-radius:50%;border:1px solid #3a3a3e;color:var(--sub);font-family:var(--f-mono);font-size:10px;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .lcnt{font-size:11px;color:var(--sub)}
 .arows{display:flex;flex-direction:column;gap:3px;margin-top:6px}
-.arow{display:grid;grid-template-columns:22px 1fr auto 16px;align-items:center;gap:6px;font-size:13px;padding:3px 6px;border-radius:8px;background:rgba(255,255,255,.03)}
-.arow.rc{background:rgba(197,139,255,.1);box-shadow:inset 3px 0 0 var(--recv)}
+.arow{display:grid;grid-template-columns:22px 1fr auto 16px;align-items:center;gap:7px;font-size:13px;padding:4px 7px;border-radius:6px;background:rgb(255 255 255/.025)}
+.arow.rc{background:rgb(var(--recv-rgb)/.09);box-shadow:inset 2px 0 0 var(--recv)}
 .arow .an{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .arow .aw{font-weight:700}
 .arow.s-ng .aw{color:var(--sub)}
@@ -155,8 +253,17 @@ td.num{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}
 .arow.s-ng .am{color:var(--ng)}
 .arow.s-hid .am{color:var(--key)}
 .lround .cchip{font-size:16px;padding:1px 10px}
-.revived{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--ok);font-size:13px;background:rgba(55,201,166,.1);border:1px solid rgba(55,201,166,.4);border-radius:10px;padding:6px 10px;margin-bottom:8px}
-.revived b{letter-spacing:.12em}
+.revived{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--ok);font-size:13px;background:rgb(var(--ok-rgb)/.08);border:1px solid rgb(var(--ok-rgb)/.35);border-radius:8px;padding:7px 10px;margin-bottom:10px}
+.revived b{font-family:var(--f-cipher);letter-spacing:.14em}
+
+.av.pickable{cursor:pointer;position:relative}
+.avbtn{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px 3px 3px;border-radius:99px;background:transparent}
+.avgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:6px}
+.avopt{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px 6px;font-size:10.5px;background:#18181a;border-color:#28282b;border-radius:10px;color:var(--sub)}
+.avopt .av{width:46px;height:46px}
+.avopt.cur{border-color:var(--key);color:var(--key);background:#232325}
+.avopt:disabled{opacity:.25}
+.avopt .who2{font-size:9.5px;color:var(--sub)}
 </style>
 </head>
 <body>
@@ -164,8 +271,27 @@ td.num{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}
 <script>
 'use strict';
 /* ===== データ ===== */
-const KANA_ROWS=[['あ','い','う','え','お'],['か','き','く','け','こ'],['さ','し','す','せ','そ'],['た','ち','つ','て','と'],['な','に','ぬ','ね','の'],['は','ひ','ふ','へ','ほ'],['ま','み','む','め','も'],['や','','ゆ','','よ'],['ら','り','る','れ','ろ'],['わ','','','','を'],['ん','','','','']];
+const KANA_ROWS=[['あ','い','う','え','お'],['か','き','く','け','こ'],['さ','し','す','せ','そ'],['た','ち','つ','て','と'],['な','に','ぬ','ね','の'],['は','ひ','ふ','へ','ほ'],['ま','み','む','め','も'],['や','','ゆ','','よ'],['ら','り','る','れ','ろ'],['わ','','','','を'],['ん','ー','','','']];
 const KANA=KANA_ROWS.flat().filter(Boolean);
+const QWERTY=['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
+const ALPHA=QWERTY.join('').split('');
+const CS=g=>g&&g.alpha?ALPHA:KANA;
+const baseOf=(c,alpha)=>alpha?String(c).toUpperCase():norm(c);
+const ROMA_T={あ:'a',い:'i',う:'u',え:'e',お:'o',か:'ka',き:'ki',く:'ku',け:'ke',こ:'ko',さ:'sa',し:'shi',す:'su',せ:'se',そ:'so',た:'ta',ち:'chi',つ:'tsu',て:'te',と:'to',な:'na',に:'ni',ぬ:'nu',ね:'ne',の:'no',は:'ha',ひ:'hi',ふ:'fu',へ:'he',ほ:'ho',ま:'ma',み:'mi',む:'mu',め:'me',も:'mo',や:'ya',ゆ:'yu',よ:'yo',ら:'ra',り:'ri',る:'ru',れ:'re',ろ:'ro',わ:'wa',を:'o',ん:'n',が:'ga',ぎ:'gi',ぐ:'gu',げ:'ge',ご:'go',ざ:'za',じ:'ji',ず:'zu',ぜ:'ze',ぞ:'zo',だ:'da',ぢ:'ji',づ:'zu',で:'de',ど:'do',ば:'ba',び:'bi',ぶ:'bu',べ:'be',ぼ:'bo',ぱ:'pa',ぴ:'pi',ぷ:'pu',ぺ:'pe',ぽ:'po',ぁ:'a',ぃ:'i',ぅ:'u',ぇ:'e',ぉ:'o',ゎ:'wa'};
+function toRoma(h){
+ const a=[...h];let out='';
+ for(let i=0;i<a.length;i++){
+  const c=a[i],n=a[i+1];
+  if(c==='ー')continue;
+  if(c==='っ'){const nx=toRoma(a.slice(i+1).join(''));if(nx){out+=nx.startsWith('CH')?'t':nx[0].toLowerCase();}continue;}
+  let r=ROMA_T[c];if(r==null)continue;
+  if(n==='ゃ'||n==='ゅ'||n==='ょ'){const v={ゃ:'a',ゅ:'u',ょ:'o'}[n];
+   if(r==='shi'||r==='chi'||r==='ji')r=r.slice(0,-1)+v;else r=r.slice(0,-1)+'y'+v;i++;}
+  else if(n&&'ぁぃぅぇぉ'.includes(n)&&r.length>1){r=r.replace(/[aiueo]$/,'')+ROMA_T[n];if(r==='tsa')r='tsa';i++;}
+  out+=r;
+ }
+ return out.toUpperCase();
+}
 const DAK={か:'が',き:'ぎ',く:'ぐ',け:'げ',こ:'ご',さ:'ざ',し:'じ',す:'ず',せ:'ぜ',そ:'ぞ',た:'だ',ち:'ぢ',つ:'づ',て:'で',と:'ど',は:'ば',ひ:'び',ふ:'ぶ',へ:'べ',ほ:'ぼ'};
 const HAN={は:'ぱ',ひ:'ぴ',ふ:'ぷ',へ:'ぺ',ほ:'ぽ'};
 const SMALL={あ:'ぁ',い:'ぃ',う:'ぅ',え:'ぇ',お:'ぉ',つ:'っ',や:'ゃ',ゆ:'ゅ',よ:'ょ',わ:'ゎ'};
@@ -198,17 +324,19 @@ const KEYS=[
 ];
 const ktag=k=>`<span class="ktag ${k.t==='文字'?'kt-m':'kt-i'}">${k.t}</span>`;
 
-/* ===== サングラス動物アイコン（16種） ===== */
+/* ===== サングラス動物アイコン（30種） ===== */
 const GL='<g><path d="M9.5 27.5l5 1.2M54.5 27.5l-5 1.2" stroke="#141414" stroke-width="2.2" stroke-linecap="round"/><rect x="14" y="24.5" width="15.5" height="10.5" rx="4.5" fill="#141414"/><rect x="34.5" y="24.5" width="15.5" height="10.5" rx="4.5" fill="#141414"/><path d="M29.5 28.5q2.5-2 5 0" stroke="#141414" stroke-width="2.2" fill="none"/><path d="M17 27.6h5M37.5 27.6h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".55"/></g>';
 const MO='<path d="M28 45.5q4 3.5 8 0" stroke="#2a1d14" stroke-width="2" fill="none" stroke-linecap="round"/>';
 const HD=c=>`<circle cx="32" cy="35" r="20" fill="${c}"/>`;
 const SHEEP=[[14,24],[21,14],[32,10],[43,14],[50,24],[54,36],[48,48],[32,54],[16,48],[10,36]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="9" fill="#f3efe6"/>`).join('');
+const HEDGE=[...Array(16)].map((_,i)=>{const a=(i/16)*Math.PI*2,b=a+0.2,c=a-0.2,R1=19,R2=29,X=32,Y=35;
+ const f=v=>v.toFixed(1);return `<path d="M${f(X+Math.cos(c)*R1)} ${f(Y+Math.sin(c)*R1)}L${f(X+Math.cos(a)*R2)} ${f(Y+Math.sin(a)*R2)}L${f(X+Math.cos(b)*R1)} ${f(Y+Math.sin(b)*R1)}z" fill="#6b5444"/>`;}).join('');
 const ANIMALS=[
  {n:'ネコ',s:`<path d="M13 27L16 6l13 11z" fill="#f2a65a"/><path d="M51 27L48 6 35 17z" fill="#f2a65a"/><path d="M17 20l1.2-8 6 5z" fill="#f7c9a0"/><path d="M47 20l-1.2-8-6 5z" fill="#f7c9a0"/>${HD('#f2a65a')}<path d="M29.5 40h5l-2.5 3z" fill="#e0607e"/><path d="M11 40l9 1.2M11 44.5l9-1M53 40l-9 1.2M53 44.5l-9-1" stroke="#7a4a22" stroke-width="1.2"/>${MO}`},
  {n:'イヌ',s:`${HD('#c98b4f')}<ellipse cx="13" cy="33" rx="6.5" ry="13" fill="#8a5a2e"/><ellipse cx="51" cy="33" rx="6.5" ry="13" fill="#8a5a2e"/><ellipse cx="32" cy="44" rx="10" ry="7.5" fill="#f1d6b0"/><ellipse cx="32" cy="40.5" rx="3.6" ry="2.6" fill="#2a1d14"/>${MO}`},
  {n:'ウサギ',s:`<ellipse cx="24" cy="12" rx="5.5" ry="13" fill="#f4f1ec"/><ellipse cx="40" cy="12" rx="5.5" ry="13" fill="#f4f1ec"/><ellipse cx="24" cy="12" rx="2.5" ry="9" fill="#f5b8c8"/><ellipse cx="40" cy="12" rx="2.5" ry="9" fill="#f5b8c8"/>${HD('#f4f1ec')}<circle cx="32" cy="41" r="2.2" fill="#e0607e"/><circle cx="20" cy="42" r="3.5" fill="#f5b8c8" opacity=".7"/><circle cx="44" cy="42" r="3.5" fill="#f5b8c8" opacity=".7"/>${MO}`},
  {n:'クマ',s:`<circle cx="16" cy="18" r="7.5" fill="#8b5a3c"/><circle cx="48" cy="18" r="7.5" fill="#8b5a3c"/><circle cx="16" cy="18" r="4" fill="#c58b65"/><circle cx="48" cy="18" r="4" fill="#c58b65"/>${HD('#8b5a3c')}<ellipse cx="32" cy="43.5" rx="9.5" ry="7.5" fill="#d9b08c"/><ellipse cx="32" cy="40" rx="3.6" ry="2.6" fill="#2a1d14"/>${MO}`},
- {n:'パンダ',s:`<circle cx="16" cy="18" r="7.5" fill="#222"/><circle cx="48" cy="18" r="7.5" fill="#222"/>${HD('#f7f7f5')}<ellipse cx="32" cy="40.5" rx="3.6" ry="2.6" fill="#222"/>${MO}`},
+ {n:'パンダ',s:`<circle cx="17" cy="19" r="8.5" fill="#1d1d1f" stroke="#8c8c90" stroke-width="1.6"/><circle cx="47" cy="19" r="8.5" fill="#1d1d1f" stroke="#8c8c90" stroke-width="1.6"/><circle cx="17" cy="19" r="3.8" fill="#4a4a4e"/><circle cx="47" cy="19" r="3.8" fill="#4a4a4e"/>${HD('#f7f7f5')}<ellipse cx="32" cy="40.5" rx="3.6" ry="2.6" fill="#222"/>${MO}`},
  {n:'キツネ',s:`<path d="M12 29L14 4l16 14z" fill="#e8792f"/><path d="M52 29L50 4 34 18z" fill="#e8792f"/><path d="M16 21l1-10 7 6z" fill="#3a2a20"/><path d="M48 21l-1-10-7 6z" fill="#3a2a20"/>${HD('#e8792f')}<path d="M13 37Q32 64 51 37Q32 45 13 37z" fill="#fbf3e8"/><ellipse cx="32" cy="41.5" rx="3.2" ry="2.3" fill="#2a1d14"/>${MO}`},
  {n:'ブタ',s:`<path d="M14 23l2-12 11 6z" fill="#f08aa0"/><path d="M50 23l-2-12-11 6z" fill="#f08aa0"/>${HD('#f5a9b8')}<ellipse cx="32" cy="42" rx="8.5" ry="5.8" fill="#f08aa0"/><ellipse cx="29" cy="42" rx="1.6" ry="2.3" fill="#a8455c"/><ellipse cx="35" cy="42" rx="1.6" ry="2.3" fill="#a8455c"/><path d="M28.5 50.5q3.5 2.5 7 0" stroke="#a8455c" stroke-width="2" fill="none" stroke-linecap="round"/>`},
  {n:'サル',s:`<circle cx="11" cy="35" r="6.5" fill="#9a6b47"/><circle cx="53" cy="35" r="6.5" fill="#9a6b47"/><circle cx="11" cy="35" r="3.5" fill="#e8c39e"/><circle cx="53" cy="35" r="3.5" fill="#e8c39e"/>${HD('#9a6b47')}<path d="M32 21c-9 0-15.5 5-15.5 12.5 0 9 6.5 16 15.5 16s15.5-7 15.5-16C47.5 26 41 21 32 21z" fill="#e8c39e"/><circle cx="30" cy="40.5" r="1.1" fill="#5a3a22"/><circle cx="34" cy="40.5" r="1.1" fill="#5a3a22"/>${MO}`},
@@ -219,7 +347,21 @@ const ANIMALS=[
  {n:'ネズミ',s:`<circle cx="14" cy="17" r="11" fill="#a9a9b3"/><circle cx="50" cy="17" r="11" fill="#a9a9b3"/><circle cx="14" cy="17" r="6.5" fill="#f2b8c6"/><circle cx="50" cy="17" r="6.5" fill="#f2b8c6"/>${HD('#b8b8c2')}<circle cx="32" cy="41" r="2.4" fill="#e0607e"/><path d="M13 41l10 1M13 45.5l10-1M51 41l-10 1M51 45.5l-10-1" stroke="#6b6b75" stroke-width="1.1"/>${MO}`},
  {n:'コアラ',s:`<circle cx="12" cy="24" r="10.5" fill="#9ea4ad"/><circle cx="52" cy="24" r="10.5" fill="#9ea4ad"/><circle cx="12" cy="24" r="6" fill="#e6dede"/><circle cx="52" cy="24" r="6" fill="#e6dede"/>${HD('#9ea4ad')}<ellipse cx="32" cy="40.5" rx="5" ry="6.5" fill="#2e2e33"/><path d="M28 50q4 2.5 8 0" stroke="#2a1d14" stroke-width="2" fill="none" stroke-linecap="round"/>`},
  {n:'ヒツジ',s:`${SHEEP}<ellipse cx="32" cy="37" rx="15" ry="17" fill="#e9d7b9"/><circle cx="25" cy="19" r="7" fill="#f3efe6"/><circle cx="39" cy="19" r="7" fill="#f3efe6"/><circle cx="32" cy="16" r="7.5" fill="#f3efe6"/><ellipse cx="32" cy="42" rx="3" ry="2" fill="#7a5a44"/>${MO}`},
- {n:'ウシ',s:`<path d="M19 17q-5-9 1-13 0 7 4.5 10z" fill="#e8dcc0"/><path d="M45 17q5-9-1-13 0 7-4.5 10z" fill="#e8dcc0"/><ellipse cx="11" cy="27" rx="7.5" ry="4" fill="#f6f3ee"/><ellipse cx="53" cy="27" rx="7.5" ry="4" fill="#f6f3ee"/>${HD('#f6f3ee')}<path d="M17 24c3-8 11-8 11-1s-7 6-11 4z" fill="#2b2b2b"/><path d="M44 38c5-2 7 3 4 7-3 2-6-2-4-7z" fill="#2b2b2b"/><ellipse cx="32" cy="45.5" rx="11" ry="7.5" fill="#f2b5c0"/><ellipse cx="28" cy="45.5" rx="1.8" ry="2.4" fill="#a8455c"/><ellipse cx="36" cy="45.5" rx="1.8" ry="2.4" fill="#a8455c"/>`}
+ {n:'ウシ',s:`<path d="M19 17q-5-9 1-13 0 7 4.5 10z" fill="#e8dcc0"/><path d="M45 17q5-9-1-13 0 7-4.5 10z" fill="#e8dcc0"/><ellipse cx="11" cy="27" rx="7.5" ry="4" fill="#f6f3ee"/><ellipse cx="53" cy="27" rx="7.5" ry="4" fill="#f6f3ee"/>${HD('#f6f3ee')}<path d="M17 24c3-8 11-8 11-1s-7 6-11 4z" fill="#2b2b2b"/><path d="M44 38c5-2 7 3 4 7-3 2-6-2-4-7z" fill="#2b2b2b"/><ellipse cx="32" cy="45.5" rx="11" ry="7.5" fill="#f2b5c0"/><ellipse cx="28" cy="45.5" rx="1.8" ry="2.4" fill="#a8455c"/><ellipse cx="36" cy="45.5" rx="1.8" ry="2.4" fill="#a8455c"/>`},
+ {n:'ゾウ',s:`<ellipse cx="11" cy="33" rx="10" ry="14" fill="#8f99a8"/><ellipse cx="53" cy="33" rx="10" ry="14" fill="#8f99a8"/><ellipse cx="11" cy="33" rx="6" ry="9" fill="#d9b3bd"/><ellipse cx="53" cy="33" rx="6" ry="9" fill="#d9b3bd"/>${HD('#a4adbb')}<path d="M32 39q-1 12 4 16q4 2 6-2" stroke="#a4adbb" stroke-width="7.5" fill="none" stroke-linecap="round"/><path d="M27 46q-3 2-2 5M37 46q3 2 2 5" stroke="#f4efe6" stroke-width="2.4" fill="none" stroke-linecap="round"/>`},
+ {n:'シカ',s:`<path d="M21 18L14 3M17 10l-7-1M43 18l7-15M47 10l7-1" stroke="#7a5230" stroke-width="3" stroke-linecap="round"/><ellipse cx="12" cy="25" rx="8" ry="4.5" fill="#c58a50" transform="rotate(-25 12 25)"/><ellipse cx="52" cy="25" rx="8" ry="4.5" fill="#c58a50" transform="rotate(25 52 25)"/>${HD('#c58a50')}<circle cx="19" cy="41" r="1.6" fill="#f3e0c6"/><circle cx="45" cy="41" r="1.6" fill="#f3e0c6"/><ellipse cx="32" cy="45" rx="8.5" ry="6.5" fill="#f0d9b8"/><ellipse cx="32" cy="42" rx="3.3" ry="2.4" fill="#2a1d14"/>${MO}`},
+ {n:'タヌキ',s:`<circle cx="15" cy="19" r="6.5" fill="#5a4636"/><circle cx="49" cy="19" r="6.5" fill="#5a4636"/>${HD('#9a7a5e')}<ellipse cx="21" cy="31" rx="10" ry="8" fill="#3b2f27"/><ellipse cx="43" cy="31" rx="10" ry="8" fill="#3b2f27"/><ellipse cx="32" cy="45" rx="9" ry="7" fill="#efe1cc"/><ellipse cx="32" cy="41.5" rx="3.3" ry="2.4" fill="#2a1d14"/>${MO}`},
+ {n:'オオカミ',s:`<path d="M12 30L13 5l16 13z" fill="#7d8796"/><path d="M52 30L51 5 35 18z" fill="#7d8796"/><path d="M16 22l1-10 7 6z" fill="#cfd5dd"/><path d="M48 22l-1-10-7 6z" fill="#cfd5dd"/>${HD('#8e98a6')}<path d="M14 38Q32 62 50 38Q32 46 14 38z" fill="#e6e9ee"/><ellipse cx="32" cy="41.5" rx="3.6" ry="2.6" fill="#22252b"/>${MO}`},
+ {n:'フクロウ',s:`<path d="M13 24L12 8l12 9z" fill="#7a5a3c"/><path d="M51 24L52 8 40 17z" fill="#7a5a3c"/>${HD('#8b6a4a')}<ellipse cx="32" cy="35" rx="17" ry="14" fill="#e9d6b8"/><path d="M29 40h6l-3 6z" fill="#e8a23a"/><path d="M22 50l3 2M42 50l-3 2M32 51v2" stroke="#6b4f35" stroke-width="1.6" stroke-linecap="round"/>`},
+ {n:'ヒヨコ',s:`<path d="M30 15q-1-7 2-9M33 15q2-6 5-7M27 16q-4-5-3-8" stroke="#f2c230" stroke-width="2.4" fill="none" stroke-linecap="round"/>${HD('#ffd84a')}<path d="M28 40h8l-4 4.5z" fill="#f08a2c"/><circle cx="20" cy="42" r="3.4" fill="#f7a8a0" opacity=".7"/><circle cx="44" cy="42" r="3.4" fill="#f7a8a0" opacity=".7"/>`},
+ {n:'カバ',s:`<circle cx="17" cy="19" r="5" fill="#8f8bb8"/><circle cx="47" cy="19" r="5" fill="#8f8bb8"/>${HD('#a3a0c8')}<ellipse cx="32" cy="46" rx="17" ry="10.5" fill="#bdbadb"/><ellipse cx="26" cy="43" rx="2" ry="2.6" fill="#5f5a8a"/><ellipse cx="38" cy="43" rx="2" ry="2.6" fill="#5f5a8a"/><path d="M26 51q6 3 12 0" stroke="#5f5a8a" stroke-width="2" fill="none" stroke-linecap="round"/>`},
+ {n:'アザラシ',s:`${HD('#c9ced6')}<circle cx="28" cy="44" r="5.5" fill="#f2f4f7"/><circle cx="36" cy="44" r="5.5" fill="#f2f4f7"/><ellipse cx="32" cy="40.5" rx="3.6" ry="2.6" fill="#2b2f36"/><path d="M14 42l9 1M14 46l9-1M50 42l-9 1M50 46l-9-1" stroke="#8a919c" stroke-width="1.1"/><circle cx="18" cy="38" r="2.6" fill="#b3b9c3"/><circle cx="46" cy="29" r="2" fill="#b3b9c3"/>`},
+ {n:'ゴリラ',s:`<circle cx="12" cy="33" r="5.5" fill="#34353a"/><circle cx="52" cy="33" r="5.5" fill="#34353a"/>${HD('#3d3e44')}<path d="M32 22c-10 0-16 5-16 11 0 3 1 4 2 5-1 9 6 14 14 14s15-5 14-14c1-1 2-2 2-5 0-6-6-11-16-11z" fill="#7b6f68"/><ellipse cx="29.5" cy="41.5" rx="1.6" ry="2" fill="#2a2420"/><ellipse cx="34.5" cy="41.5" rx="1.6" ry="2" fill="#2a2420"/><path d="M27 48q5 3 10 0" stroke="#2a2420" stroke-width="2" fill="none" stroke-linecap="round"/>`},
+ {n:'ハリネズミ',s:`${HEDGE}${HD('#f0d6b5')}<path d="M14 28Q32 8 50 28Q42 20 32 20Q22 20 14 28z" fill="#6b5444"/><circle cx="20" cy="42" r="3" fill="#f2a9a0" opacity=".7"/><circle cx="44" cy="42" r="3" fill="#f2a9a0" opacity=".7"/><ellipse cx="32" cy="41.5" rx="2.6" ry="2.1" fill="#2a1d14"/>${MO}`},
+ {n:'キリン',s:`<path d="M25 18V8M39 18V8" stroke="#c9913a" stroke-width="3.2" stroke-linecap="round"/><circle cx="25" cy="7" r="3.2" fill="#8a5a2e"/><circle cx="39" cy="7" r="3.2" fill="#8a5a2e"/><ellipse cx="11" cy="27" rx="7.5" ry="3.8" fill="#e8b75a" transform="rotate(-20 11 27)"/><ellipse cx="53" cy="27" rx="7.5" ry="3.8" fill="#e8b75a" transform="rotate(20 53 27)"/>${HD('#e8b75a')}<circle cx="22" cy="20" r="3" fill="#b9782f"/><circle cx="43" cy="20" r="2.6" fill="#b9782f"/><circle cx="16" cy="43" r="2.4" fill="#b9782f"/><circle cx="48" cy="42" r="2.8" fill="#b9782f"/><ellipse cx="32" cy="45.5" rx="9.5" ry="7" fill="#f3d9a8"/><ellipse cx="29" cy="44.5" rx="1.3" ry="1.8" fill="#6b4520"/><ellipse cx="35" cy="44.5" rx="1.3" ry="1.8" fill="#6b4520"/>`},
+ {n:'ウマ',s:`<path d="M18 23L16 8l10 8z" fill="#9b6a43"/><path d="M46 23L48 8l-10 8z" fill="#9b6a43"/>${HD('#9b6a43')}<path d="M21 19q7-10 17-6q-5 2-4 8q-6-4-13-2z" fill="#3b2a1e"/><ellipse cx="32" cy="46" rx="11.5" ry="8" fill="#c99a72"/><ellipse cx="28" cy="46" rx="1.7" ry="2.3" fill="#4a3020"/><ellipse cx="36" cy="46" rx="1.7" ry="2.3" fill="#4a3020"/>`},
+ {n:'リス',s:`<path d="M14 27L15 7l12 13z" fill="#c9702f"/><path d="M50 27L49 7 37 20z" fill="#c9702f"/><path d="M15 7l-3-4M15 7l1-5M49 7l3-4M49 7l-1-5" stroke="#7a3f16" stroke-width="2" stroke-linecap="round"/>${HD('#d9843f')}<ellipse cx="32" cy="44.5" rx="11.5" ry="8" fill="#f6dfc0"/><circle cx="19" cy="42" r="3.4" fill="#f2a08a" opacity=".6"/><circle cx="45" cy="42" r="3.4" fill="#f2a08a" opacity=".6"/><ellipse cx="32" cy="40.5" rx="2.6" ry="2" fill="#3a2414"/><rect x="30" y="45.5" width="4" height="4" rx=".8" fill="#fff" stroke="#c9b7a0" stroke-width=".7"/>`},
+ {n:'オウム',s:`<path d="M29 17q-3-11 3-14q0 7 4 11z" fill="#f2c230"/><path d="M33 16q2-9 8-9q-3 5-4 10z" fill="#3a8fe0"/>${HD('#e5483d')}<ellipse cx="32" cy="30" rx="18" ry="8" fill="#f4f1ea"/><path d="M25.5 38q6.5-4 13 0q0 9-6.5 13q-2-7-6.5-13z" fill="#3a3a3e"/><path d="M27 39.5q5-2 10 0" stroke="#e8e2d6" stroke-width="1.6" fill="none" stroke-linecap="round"/>`}
 ];
 const animalSvg=a=>`<svg viewBox="0 0 64 64" class="avs">${(ANIMALS[a]||ANIMALS[0]).s}${GL}</svg>`;
 
@@ -237,8 +379,349 @@ const WORD_SRC=`
 正月:しょうがつ 誕生日:たんじょうび 花火:はなび 祭り:まつり 運動会:うんどうかい 遠足:えんそく ハロウィン クリスマス 節分:せつぶん 夏休み:なつやすみ 結婚式:けっこんしき 旅行:りょこう 宝箱:たからばこ 地図:ちず 王冠:おうかん 剣:けん 地球:ちきゅう 宇宙:うちゅう 恐竜:きょうりゅう ドラゴン 雪だるま:ゆきだるま 鳥居:とりい 灯台:とうだい 観覧車:かんらんしゃ
 `;
 const WORDS=WORD_SRC.trim().split(/\s+/).map(s=>{const [w,r]=s.split(':');return {w,r:r||''};});
+const ASSOC_SRC=`
+りんご:あか,あおもり,ぱい,なし,くだもの
+みかん:こたつ,おれんじ,ふゆ,かわ,くだもの
+バナナ:きいろ,さる,かわ,ほそい,くだもの
+いちご:あか,けーき,つぶ,はる,くだもの
+ぶどう:むらさき,わいん,つぶ,あき,くだもの
+もも:ぴんく,なつ,かんづめ,やわらか,くだもの
+すいか:なつ,うみ,たね,みどり,くだもの
+メロン:みどり,あみ,たかい,なつ,くだもの
+レモン:すっぱい,きいろ,さわー,ちゃ,くだもの
+さくらんぼ:あか,ふたつ,やまがた,なつ,くだもの
+トマト:あか,さらだ,やさい,けちゃっぷ
+きゅうり:みどり,かっぱ,やさい,なつ,さらだ
+にんじん:おれんじ,うま,やさい,かれー
+たまねぎ:なみだ,やさい,かれー,ちゃいろ
+じゃがいも:ころっけ,やさい,ぽてと,かれー
+かぼちゃ:はろうぃん,おれんじ,やさい,ふゆ
+だいこん:おでん,しろ,やさい,ふゆ,おろし
+キャベツ:みどり,やさい,はる,とんかつ
+ピーマン:みどり,にがい,やさい,こども
+なす:むらさき,やさい,なつ,ぬか
+とうもろこし:きいろ,なつ,つぶ,ぽっぷこーん,やさい
+ごはん:ちゃわん,はし,こめ,あさ
+パン:むぎ,あさ,ばたー,やく
+うどん:めん,かがわ,きつね,だし
+そば:めん,ながの,ざる,ねぎ
+ラーメン:めん,すーぷ,ちゃーしゅー,みそ
+カレー:からい,ごはん,いんど,すぷーん
+すし:さかな,まぐろ,しょうゆ,わさび
+てんぷら:えび,あぶら,ころも,つゆ
+おにぎり:のり,こめ,うめ,えんそく
+みそしる:あさ,とうふ,わかめ,おわん
+たまご:にわとり,きみ,しろ,あさ
+チーズ:ねずみ,きいろ,ぴざ,うし
+バター:ぱん,きいろ,うし,とける
+ケーキ:たんじょうび,いちご,あまい,ろうそく
+クッキー:あまい,おやつ,やく,かんかん
+チョコレート:あまい,ちゃいろ,おやつ,かかお
+アイス:つめたい,なつ,あまい,こおり
+プリン:あまい,おやつ,たまご,からめる
+ドーナツ:あな,あまい,まる,おやつ
+ハンバーガー:ぽてと,にく,ぱん,あめりか
+ピザ:ちーず,まる,いたりあん,やく
+サンドイッチ:ぱん,はむ,れたす,えんそく
+ぎょうざ:ちゅうごく,かわ,やく,たれ
+からあげ:とり,あぶら,べんとう,おかず
+やきとり:くし,たれ,しお,にわとり
+おでん:だいこん,ふゆ,こんぶ,たまご
+せんべい:しょうゆ,こめ,おやつ,かたい
+だんご:くし,つき,あまい,もち
+ポップコーン:えいが,しお,はじける,とうもろこし
+牛乳:うし,しろ,あさ,ほね
+コーヒー:にがい,くろ,あさ,まめ
+紅茶:いぎりす,かっぷ,れもん,おちゃ
+ジュース:あまい,かっぷ,すとろー,みかん
+お茶:みどり,ゆのみ,しずおか,あつい
+犬:わん,さんぽ,ほね,ぺっと
+猫:にゃー,ねずみ,こたつ,ぺっと
+うさぎ:みみ,にんじん,つき,ぴょん
+ライオン:たてがみ,おう,さばんな,ねこ
+トラ:しま,きいろ,ねこ,つよい
+ゾウ:はな,はいいろ,きば,おおきい
+キリン:くび,ながい,きいろ,もよう
+パンダ:くま,ささ,ちゅうごく,どうぶつえん
+さる:ばなな,き,やま,ごりら
+くま:はちみつ,もり,ふゆ,ぬいぐるみ
+きつね:うどん,きいろ,もり,しっぽ
+たぬき:はら,もり,ばける,しがらき
+うま:はしる,けいば,にんじん,のる
+うし:もー,みるく,ぼくじょう,にく
+ぶた:ぶー,にく,ぴんく,とんかつ
+ひつじ:けいと,めー,ようもう,ねむる
+ヤギ:かみ,めー,ひげ,ちーず
+にわとり:たまご,あさ,とり,とさか
+ペンギン:なんきょく,さむい,とり,すいぞくかん
+カエル:いけ,あめ,みどり,げこ
+へび:ながい,どく,たまご,みどり
+カメ:こうら,おそい,うみ,ながいき
+ワニ:くち,きば,かわ,みどり
+イルカ:うみ,じゃんぷ,かしこい,すいぞくかん
+クジラ:うみ,しお,あお,おおきい
+サメ:うみ,きば,こわい,ひれ
+タコ:あし,すみ,はち,たこやき
+イカ:すみ,あし,しろ,うみ
+カニ:はさみ,よこ,あか,うみ
+エビ:てんぷら,あか,うみ,ふらい
+金魚:あか,まつり,すくい,すいそう
+カブトムシ:つの,なつ,もり,むし
+チョウ:はな,はね,はる,むし
+ハチ:はちみつ,さす,きいろ,むし
+アリ:くろ,ちいさい,さとう,むし
+トンボ:あき,はね,め,むし
+セミ:なつ,みーん,き,むし
+カラス:くろ,ごみ,かー,とり
+ハト:へいわ,こうえん,ぽっぽ,とり
+フクロウ:よる,もり,め,とり
+コアラ:ゆーかり,おーすとらりあ,き,ねむい
+カンガルー:ぽけっと,じゃんぷ,おーすとらりあ,あかちゃん
+ゴリラ:むね,ばなな,つよい,さる
+リス:どんぐり,しっぽ,き,もり
+ハムスター:ぺっと,たね,ほお,ちいさい
+太陽:ひる,あつい,ひかり,なつ
+月:よる,うさぎ,まる,つきみ
+星:よる,ひかり,ながれぼし,そら
+雲:しろ,そら,あめ,わたあめ
+雨:かさ,つゆ,みず,ぬれる
+雪:しろ,ふゆ,さむい,ゆきだるま
+雷:ひかり,おへそ,でんき,ごろ
+虹:いろ,そら,あめ,あーち
+風:そよかぜ,ふく,たこ,つよい
+台風:あめ,かぜ,つよい,あき
+海:あお,なみ,なつ,さかな
+山:たかい,のぼる,ふじ,もり
+川:みず,ながれ,さかな,はし
+湖:みず,ぼーと,ひろい,しずか
+森:き,どうぶつ,みどり,くま
+砂漠:すな,あつい,らくだ,ひろい
+島:うみ,ふね,むじんとう,ちいさい
+火山:まぐま,ふんか,やま,あつい
+滝:みず,おちる,たかい,おと
+花:はち,さく,かびん,はる
+桜:はる,ぴんく,はなみ,きれい
+ひまわり:なつ,きいろ,たいよう,たね
+チューリップ:はる,あか,おらんだ,きゅうこん
+バラ:あか,とげ,はな,きれい
+木:もり,は,えだ,みどり
+葉っぱ:みどり,き,あき,おちば
+石:かたい,おもい,かわら,ころ
+砂:すなはま,うみ,さばく,ちいさい
+氷:つめたい,ふゆ,みず,かきごおり
+火:あつい,あか,もえる,きゃんぷ
+時計:じかん,はり,まる,うで
+傘:あめ,さす,ぬれない,かさたて
+鏡:かお,うつる,けしょう,みる
+椅子:すわる,つくえ,あし,きょうしつ
+机:べんきょう,いす,がっこう,ひきだし
+ベッド:ねる,よる,まくら,ふとん
+まくら:ねる,よる,ゆめ,べっど
+布団:ねる,ふゆ,よる,ほす
+テレビ:みる,あにめ,りもこん,ばんぐみ
+冷蔵庫:つめたい,だいどころ,しろ,ひやす
+電話:こえ,ぼたん,すまほ,でんぱ
+スマホ:でんわ,あぷり,めーる,げーむ
+パソコン:きーぼーど,まうす,しごと,がめん
+カメラ:しゃしん,れんず,りょこう,とる
+鍵:どあ,あける,いえ,あな
+財布:おかね,ぽけっと,かいもの,さつ
+かばん:もつ,がっこう,にもつ,ほん
+靴:あし,はく,あるく,くつした
+帽子:あたま,かぶる,なつ,ひよけ
+めがね:め,みる,れんず,ふち
+手袋:て,ふゆ,はめる,けいと
+マフラー:くび,ふゆ,まく,けいと
+ネクタイ:くび,すーつ,しごと,むすぶ
+指輪:ゆび,けっこん,だいや,きん
+歯ブラシ:は,あさ,みがく,よる
+タオル:ふく,おふろ,ゆ,あせ
+せっけん:あわ,てあらい,しろ,おふろ
+はさみ:きる,かみ,ちょき,こうさく
+鉛筆:かく,けしごむ,ふでばこ,しん
+消しゴム:けす,えんぴつ,ふでばこ,まちがい
+ノート:かく,べんきょう,がっこう,ぺーじ
+本:よむ,しおり,としょかん,ぺーじ
+新聞:あさ,よむ,にゅーす,はいたつ
+手紙:かく,ぽすと,きって,ふうとう
+切手:てがみ,ぽすと,はる,ゆうびん
+風船:まるい,そら,ふくらむ,われる
+ろうそく:ひ,けーき,あかり,ほのお
+電球:ひかり,でんき,あかり,ひらめき
+扇風機:かぜ,なつ,まわる,はね
+掃除機:ごみ,すう,そうじ,へや
+洗濯機:ふく,まわる,みず,あわ
+ほうき:そうじ,まじょ,はく,ごみ
+バケツ:みず,そうじ,くむ,あお
+ハンガー:ふく,かける,ほす,くろーぜっと
+箸:ごはん,にほん,ふたつ,ちゃわん
+ハンマー:くぎ,たたく,だいく,こうぐ
+のこぎり:きる,き,だいく,こうぐ
+ドライバー:ねじ,まわす,こうぐ,うんてん
+ねじ:まわす,どらいばー,くぎ,こうぐ
+くぎ:はんまー,うつ,き,とがる
+はしご:のぼる,たかい,やね,だいく
+スコップ:ほる,すな,つち,はたけ
+じょうろ:みず,はな,にわ,あめ
+ペンキ:ぬる,いろ,かべ,ふで
+テープ:はる,せろはん,とめる,まく
+ロープ:ひも,むすぶ,つな,ながい
+懐中電灯:ひかり,よる,でんち,くらい
+電池:でんき,まいなす,りもこん,ぷらす
+植木鉢:はな,つち,にわ,たね
+軍手:て,しごと,にわ,はたけ
+車:どらいぶ,たいや,はしる,みち
+バス:のる,えんそく,みち,えき
+電車:えき,せんろ,きっぷ,つうきん
+新幹線:はやい,えき,りょこう,ひかり
+飛行機:そら,くうこう,つばさ,りょこう
+船:うみ,みなと,なみ,いかり
+自転車:こぐ,たいや,べる,さどる
+バイク:へるめっと,はやい,たいや,みち
+タクシー:のる,えき,めーたー,きゃく
+救急車:びょういん,さいれん,しろ,けが
+消防車:あか,ひ,さいれん,ほーす
+ヘリコプター:そら,ぷろぺら,とぶ,まわる
+ロケット:うちゅう,つき,ほし,とぶ
+トラック:にもつ,はこぶ,みち,おおきい
+信号:あか,あお,きいろ,みち
+学校:せんせい,きょうしつ,べんきょう,ちゃいむ
+病院:いしゃ,くすり,けが,かんごし
+駅:でんしゃ,きっぷ,ほーむ,かいさつ
+空港:ひこうき,りょこう,そら,にもつ
+公園:ぶらんこ,すなば,あそぶ,べんち
+図書館:ほん,しずか,かりる,よむ
+動物園:ぞう,きりん,さる,らいおん
+水族館:さかな,いるか,すいそう,ぺんぎん
+遊園地:こーすたー,あそぶ,ゆめ,たのしい
+映画館:えいが,ぽっぷこーん,くらい,すくりーん
+神社:とりい,おまいり,さいせん,きつね
+お寺:かね,ほとけ,なら,おぼうさん
+銀行:おかね,あずける,かね,ちょきん
+郵便局:てがみ,きって,ぽすと,はがき
+交番:けいさつ,みち,おまわりさん,まいご
+美術館:え,がか,みる,しずか
+温泉:ゆ,あつい,ゆげ,はこね
+砂浜:うみ,すな,なつ,かい
+スーパー:かいもの,れじ,かご,やさい
+コンビニ:べんとう,よる,れじ,おにぎり
+本屋:ほん,まんが,ざっし,よむ
+パン屋:ぱん,やく,あさ,におい
+台所:りょうり,なべ,れいぞうこ,ほうちょう
+お風呂:ゆ,あわ,あつい,せっけん
+トイレ:かみ,みず,ながす,おなか
+城:とのさま,てんしゅ,さむらい,おしろ
+先生:がっこう,じゅぎょう,こくばん,おしえる
+医者:びょういん,しろ,くすり,ちゅうしゃ
+警察官:こうばん,ぱとかー,どろぼう,けいぼう
+消防士:ひ,ほーす,あか,かじ
+料理人:なべ,こっく,あじ,ほうちょう
+大工:いえ,はんまー,き,くぎ
+歌手:うた,まいく,すてーじ,こえ
+画家:え,ふで,えのぐ,きゃんばす
+忍者:しゅりけん,かくれる,くのいち,すいとん
+王様:かんむり,しろ,くに,えらい
+お姫様:どれす,しろ,おうじ,てぃあら
+魔法使い:つえ,ほうき,まほう,くすり
+宇宙人:ほし,うちゅう,ちきゅう,ゆーふぉー
+赤ちゃん:みるく,なく,だっこ,おむつ
+おばけ:よる,こわい,しろ,はろうぃん
+ロボット:きかい,てつ,ぼたん,みらい
+海賊:ふね,たから,うみ,がいこつ
+探偵:なぞ,むしめがね,はんにん,すいり
+サンタクロース:くりすます,そり,ぷれぜんと,ひげ
+鬼:つの,こわい,せつぶん,まめ
+サッカー:ぼーる,ける,ごーる,しあい
+野球:ばっと,ぼーる,ほーむらん,こうしえん
+テニス:らけっと,ぼーる,ねっと,こーと
+水泳:ぷーる,およぐ,なつ,みず
+スキー:ゆき,ふゆ,やま,すべる
+相撲:どひょう,りきし,まわし,よこづな
+柔道:おび,なげる,どうぎ,たたみ
+マラソン:はしる,ながい,ごーる,つかれる
+釣り:さかな,さお,うみ,えさ
+ピアノ:けんばん,おと,くろ,しろ
+ギター:げん,おと,ろっく,うた
+太鼓:おと,まつり,たたく,どん
+笛:おと,ふく,たて,まつり
+バイオリン:げん,ゆみ,おと,がくだん
+将棋:こま,おう,ばん,たいきょく
+トランプ:かーど,じょーかー,ばば,げーむ
+けん玉:さら,たま,ひも,わざ
+こま:まわる,ひも,おしょうがつ,ちから
+なわとび:とぶ,ひも,じゃんぷ,たいいく
+ボール:まるい,なげる,ける,さっかー
+絵本:え,よむ,こども,ねる
+パズル:ぴーす,くむ,かんせい,なぞ
+積み木:つむ,き,しかく,こども
+ぬいぐるみ:くま,だく,かわいい,わた
+ブランコ:こうえん,ゆれる,のる,こぐ
+正月:おせち,もち,おとしだま,ふゆ
+誕生日:けーき,ぷれぜんと,おめでとう,ろうそく
+花火:なつ,よる,そら,どーん
+祭り:たいこ,やたい,みこし,ゆかた
+運動会:かけっこ,つなひき,あか,しろ
+遠足:おべんとう,ばす,やま,りゅっく
+ハロウィン:かぼちゃ,おばけ,おかし,かそう
+クリスマス:さんた,つりー,ふゆ,ぷれぜんと
+節分:まめ,おに,ふく,ふゆ
+夏休み:うみ,しゅくだい,あそぶ,ながい
+結婚式:どれす,ゆびわ,けーき,ちかい
+旅行:かばん,ほてる,おみやげ,でかける
+宝箱:きん,かいぞく,たから,かぎ
+地図:みち,まよう,たから,ひろげる
+王冠:おう,きん,あたま,ほうせき
+剣:きる,ゆうしゃ,さむらい,さや
+地球:まるい,あお,うちゅう,ほし
+宇宙:ほし,ろけっと,くらい,ひろい
+恐竜:きば,かせき,むかし,おおきい
+ドラゴン:ひ,つばさ,つよい,うろこ
+雪だるま:ふゆ,しろ,ゆき,にんじん
+鳥居:じんじゃ,あか,もん,きつね
+灯台:うみ,ひかり,みさき,ふね
+観覧車:ゆうえんち,たかい,まわる,よる
+`;
+/* ===== BOT用：読み・連想・鍵ルール ===== */
+const toHira=t=>[...t].map(c=>{const n=c.charCodeAt(0);return n>=0x30A1&&n<=0x30F6?String.fromCharCode(n-0x60):c;}).join('');
+WORDS.forEach(w=>{w.y=w.r||toHira(w.w);});
+const ASSOC={};ASSOC_SRC.trim().split('\n').forEach(l=>{const [w,a]=l.split(':');ASSOC[w]=a.split(',');});
+const VOCAB=[...new Set([...WORDS.map(w=>w.y),...Object.values(ASSOC).flat()])];
+const SUFFIX=['ずき','のえ','ごっこ'];
+const kc=t=>[...t].filter(c=>c!=='ー');
+const kFirst=t=>norm(kc(t)[0]||'');
+const kLast=t=>{const a=kc(t);return norm(a[a.length-1]||'');};
+const kRow=c=>KANA_ROWS.findIndex(r=>r.includes(norm(c)));
+function keyRule(k,r,w){
+ if(!w||w===r)return false;
+ const a=kc(r),b=kc(w);
+ switch(k){
+ case 0:return kFirst(w)===kFirst(r);
+ case 1:return kFirst(w)===kFirst(r)&&a.length===b.length;
+ case 2:return a.length>1&&b.length>1&&norm(a[1])===norm(b[1]);
+ case 3:return kLast(w)===kLast(r);
+ case 4:return kFirst(w)===kLast(r);
+ case 5:return kLast(w)===kFirst(r);
+ case 6:return kRow(kFirst(w))===kRow(kFirst(r));
+ case 7:{const S=new Set(a.map(norm));return new Set(b.map(norm).filter(c=>S.has(c))).size>=2;}
+ case 8:return a.length===b.length&&a.filter((c,i)=>c!==b[i]).length===1;
+ case 9:return w.includes(r);
+ }
+ return false;
+}
+let ROMA_IDX=null;
+function romaIdx(){if(ROMA_IDX)return ROMA_IDX;ROMA_IDX={};for(const v of VOCAB){const r=toRoma(v);(ROMA_IDX[r]=ROMA_IDX[r]||[]).push(v);}return ROMA_IDX;}
+function cipherFits(k,wordIdx,cipher,alpha){
+ const w=WORDS[wordIdx];
+ if(alpha){
+  const C=String(cipher).toUpperCase();
+  if(k<10){if(k===9&&SUFFIX.some(sx=>toRoma(w.y+sx)===C))return true;return (romaIdx()[C]||[]).some(v=>keyRule(k,w.y,v));}
+  return (ASSOC[w.w]||[]).some(a=>toRoma(a)===C);
+ }
+ if(k<10)return keyRule(k,w.y,cipher);
+ return (ASSOC[w.w]||[]).includes(cipher);
+}
 
-const WN=28,ANSWER_MS=60000, KEY_MS=60000, PREFIX='angoparty-';
+const WN=28,ANSWER_MS=60000, KEY_MS=60000, KPICK_MS=30000, PREFIX='angoparty-';
 
 /* ===== 共通 ===== */
 const $app=document.getElementById('app');
@@ -259,10 +742,19 @@ const IC={
 /* ===== サウンド ===== */
 let AC=null;
 function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC;}
+['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>ac(),{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AC&&AC.state==='suspended')AC.resume();});
+let titleBlink=null;
+function notifyCipher(){
+ if(AC&&AC.state==='suspended')AC.resume();
+ SE.send();
+ try{if(navigator.vibrate)navigator.vibrate([60,40,60]);}catch(e){}
+ if(document.hidden&&!titleBlink){let on=false;titleBlink=setInterval(()=>{on=!on;document.title=on?'■ 暗号が届いた':'ANGO';if(!document.hidden){clearInterval(titleBlink);titleBlink=null;document.title='ANGO';}},800);}
+}
 function tone(f,d,type,vol,delay){const a=AC;if(!a)return;const t=a.currentTime+(delay||0);const o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.15,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+0.03);}
 const SE={
  tap:()=>tone(880,0.06,'triangle',0.07),
- send:()=>{tone(523,0.12,'triangle',0.14);tone(784,0.2,'triangle',0.14,0.1);},
+ send:()=>{[0,0.11,0.22].forEach((d,i)=>tone(i<2?1568:2093,0.07,'square',0.09,d));tone(1047,0.35,'sine',0.16,0.36);tone(1568,0.35,'sine',0.1,0.36);},
  ok:()=>{tone(659,0.15,'sine',0.18);tone(880,0.15,'sine',0.18,0.12);tone(1319,0.32,'sine',0.16,0.24);},
  ng:()=>{tone(220,0.22,'square',0.07);tone(165,0.3,'square',0.07,0.15);},
  tick:()=>tone(1200,0.05,'square',0.04),
@@ -276,12 +768,14 @@ const local={buf:[],sel:null,keySel:null,modal:null,phaseKey:''};
 let localDeadline=null,localTotal=60000,lastTick=-1,toastTimer=null;
 
 /* ===== ホスト処理 ===== */
-function newHost(){return {phase:'wait',players:[],game:null,gameNo:0,pick:{s:null,r:null}};}
+function newHost(){return {phase:'wait',players:[],game:null,gameNo:0,pick:{s:null,r:null},match:{sets:3,cur:0,hist:[]},settings:{hide:false,alpha:false}};}
 function addPlayer(id,name,bot){
  const taken=H.players.map(p=>p.a);
  const a=shuffle([...ANIMALS.keys()].filter(i=>!taken.includes(i)))[0];
  H.players.push({id,name:bot?ANIMALS[a].n+'(bot)':name,bot,a,online:true,total:0,sent:0});
 }
+let botSeq=0;
+function addBot(){if(H.players.length>=10)return false;addPlayer('bot'+(botSeq++),'',true);return true;}
 function pickWords(g){
  const av=shuffle([...WORDS.keys()].filter(i=>!g.seen.includes(i)));
  g.words=av.slice(0,WN);g.seen.push(...g.words);
@@ -303,22 +797,24 @@ function startGame(){
  if(sender&&sender===receiver)receiver=null;
  if(!sender){const pool=ps.filter(p=>p!==receiver);const min=Math.min(...pool.map(p=>p.sent));sender=shuffle(pool.filter(p=>p.sent===min))[0];}
  if(!receiver)receiver=shuffle(ps.filter(p=>p!==sender))[0];
- H.pick={s:null,r:null};
+ H.pick={s:null,r:null};H.match.cur++;
  sender.sent++;
  H.gameNo++;
- H.game={senderId:sender.id,receiverId:receiver.id,members:shuffle(ps.map(p=>p.id)),key:rint(KEYS.length),
-  seen:[],words:[],target:-1,targets:[],
+ H.game={senderId:sender.id,receiverId:receiver.id,members:shuffle(ps.map(p=>p.id)),key:null,keyChoices:shuffle([...KEYS.keys()]).slice(0,4),
+  seen:[],words:[],target:-1,targets:[],alpha:!!(H.settings&&H.settings.alpha),
   round:0,used:[],rounds:[[]],solved:{},solvedRound:[],answers:{},curCipher:'',deadline:0,keyGuesses:{},revealOk:false,lost:false,result:null,revived:[]};
  pickWords(H.game);
- H.phase='compose';
+ H.phase='keypick';H.game.deadline=Date.now()+KPICK_MS;
+ setT(KPICK_MS,()=>{const g=H.game;if(g&&H.phase==='keypick')setKey(g.keyChoices[rint(4)]);});
  broadcast();
 }
-function checkCipher(text,used){
+function setKey(k){const g=H.game;clearT();g.key=k;H.phase='compose';broadcast();}
+function checkCipher(text,used,alpha){
  const seen=[];
  for(const c of [...text]){
-  if(c==='ー')continue;
-  const b=norm(c);
-  if(!KANA.includes(b))return {err:'ひらがな以外は使えません'};
+  const b=baseOf(c,alpha);
+  if(alpha&&!ALPHA.includes(b))return {err:'アルファベット以外は使えません'};
+  if(!alpha&&!KANA.includes(b))return {err:'ひらがな以外は使えません'};
   if(used.includes(b))return {err:'「'+b+'」は使用済みです'};
   if(seen.includes(b))return {err:'「'+b+'」が重複しています'};
   seen.push(b);
@@ -329,22 +825,48 @@ function checkCipher(text,used){
 function handleAction(pid,a){
  const g=H.game;
  switch(a.t){
- case 'start':if(pid===myId&&(H.phase==='wait'||H.phase==='result'))startGame();break;
+ case 'start':{
+  if(pid!==myId)return;
+  const M=H.match;
+  if(H.phase==='wait'||H.phase==='final'){M.cur=0;M.hist=[];M.id=Date.now().toString(36)+rint(1e6).toString(36);for(const p of H.players){p.total=0;p.sent=0;}H.gameNo=0;startGame();}
+  else if(H.phase==='result'&&M.cur<M.sets)startGame();
+  break;}
+ case 'alpha':if(pid===myId&&(H.phase==='wait'||H.phase==='final')){H.settings.alpha=!!a.on;broadcast();}break;
+ case 'hide':if(pid===myId&&(H.phase==='wait'||H.phase==='final')){H.settings.hide=!!a.on;broadcast();}break;
+ case 'sets':if(pid===myId&&(H.phase==='wait'||H.phase==='final')){H.match.sets=Math.max(1,Math.min(10,a.n|0));broadcast();}break;
+ case 'final':if(pid===myId&&H.phase==='result'&&H.match.cur>=H.match.sets)toFinal();break;
+ case 'lobby':if(pid===myId&&H.phase==='final'){H.phase='wait';H.game=null;broadcast();}break;
+ case 'addbot':if(pid===myId&&(H.phase==='wait'||H.phase==='result'||H.phase==='final')){if(!addBot())sendErr(myId,'満員です（最大10人）');else broadcast();}break;
+ case 'avatar':{
+  if(!(H.phase==='wait'||H.phase==='result'||H.phase==='final'))return;
+  const me=pById(pid),n=a.a|0;if(!me||n<0||n>=ANIMALS.length)return;
+  if(H.players.some(p=>p!==me&&p.a===n)){sendErr(pid,'そのアイコンは使用中です');return;}
+  me.a=n;broadcast();break;}
+ case 'rmbot':{
+  if(pid!==myId||!(H.phase==='wait'||H.phase==='result'||H.phase==='final'))return;
+  const b=pById(a.id);if(!b||!b.bot)return;
+  H.players=H.players.filter(p=>p!==b);
+  if(H.pick.s===b.id)H.pick.s=null;if(H.pick.r===b.id)H.pick.r=null;
+  broadcast();break;}
  case 'pick':{
-  if(pid!==myId||!(H.phase==='wait'||H.phase==='result'))return;
+  if(pid!==myId||!(H.phase==='wait'||H.phase==='result'||H.phase==='final'))return;
   const role=a.role==='r'?'r':'s',other=role==='s'?'r':'s',id=a.id||null;
   if(id&&!pById(id))return;
   H.pick[role]=id;if(id&&H.pick[other]===id)H.pick[other]=null;
   broadcast();break;}
- case 'abort':if(pid===myId&&g){clearT();H.game=null;H.phase='wait';broadcast();}break;
+ case 'abort':if(pid===myId&&g){clearT();H.game=null;H.phase='wait';H.match.cur=0;H.match.hist=[];broadcast();}break;
  case 'cipher':{
   if(!g||H.phase!=='compose'||pid!==g.senderId)return;
-  const text=String(a.text||'').slice(0,20);
-  const r=checkCipher(text,g.used);
+  let text=String(a.text||'').slice(0,20);if(g.alpha)text=text.toUpperCase();
+  const r=checkCipher(text,g.used,g.alpha);
   if(r.err){sendErr(pid,r.err);return;}
   g.used.push(...r.bases);g.curCipher=text;g.answers={};
   H.phase='answer';g.deadline=Date.now()+ANSWER_MS;setT(ANSWER_MS,endAnswer);
   broadcast();break;}
+ case 'keypick':{
+  if(!g||H.phase!=='keypick'||pid!==g.senderId)return;
+  const k=a.k|0;if(!g.keyChoices.includes(k))return;
+  setKey(k);break;}
  case 'answer':{
   if(!g||H.phase!=='answer')return;
   if(!answerers(g).includes(pid)||pid in g.answers)return;
@@ -371,7 +893,7 @@ function endAnswer(){
  }
  g.rounds[g.round].push({cipher:g.curCipher,res});
  g.revealOk=res[g.receiverId].ok;
- if(!g.revealOk&&g.used.length>=KANA.length)g.lost=true;
+ if(!g.revealOk&&g.used.length>=CS(g).length)g.lost=true;
  H.phase='reveal';broadcast();
  setT(g.revealOk?5500:4200,afterReveal);
 }
@@ -384,6 +906,7 @@ function afterReveal(){
  g.revealOk=false;H.phase='compose';broadcast();
 }
 function toKey(){const g=H.game;g.keyGuesses={};H.phase='keyguess';g.deadline=Date.now()+KEY_MS;setT(KEY_MS,finishGame);broadcast();}
+function toFinal(){clearT();H.phase='final';broadcast();}
 function finishGame(){
  const g=H.game;if(!g||H.phase!=='keyguess')return;clearT();
  const inter=interceptors(g);
@@ -393,37 +916,48 @@ function finishGame(){
  for(const id of inter)scores[id]=(g.solved[id]||0)*(g.keyGuesses[id]===g.key?2:1);
  for(const id in scores){const p=pById(id);if(p)p.total+=scores[id];}
  g.result={scores,right,wrong,pairPts};
+ H.match.hist.push({set:H.match.cur,s:g.senderId,r:g.receiverId,lost:g.lost,scores:Object.assign({},scores)});
  H.phase='result';broadcast();
+ if(H.match.cur>=H.match.sets)setT(12000,()=>{if(H.phase==='result')toFinal();});
 }
 function viewFor(pid){
- const v={phase:H.phase,me:pid,host:pid===myId,gameNo:H.gameNo,test:testMode,code:roomCode,pick:Object.assign({},H.pick),
+ const v={phase:H.phase,me:pid,host:pid===myId,gameNo:H.gameNo,match:JSON.parse(JSON.stringify(H.match)),settings:Object.assign({hide:false,alpha:false},H.settings),test:testMode,code:roomCode,pick:Object.assign({},H.pick),
   players:H.players.map(p=>({id:p.id,name:p.name,a:p.a,total:p.total,online:p.online,bot:p.bot}))};
  const g=H.game;if(!g)return v;
  const role=pid===g.senderId?'sender':pid===g.receiverId?'receiver':g.members.includes(pid)?'inter':'spec';
- const fin=H.phase==='result',pair=role==='sender'||role==='receiver',live=H.phase==='answer'||H.phase==='keyguess';
+ const fin=H.phase==='result',pair=role==='sender'||role==='receiver',live=H.phase==='answer'||H.phase==='keyguess'||H.phase==='keypick';
  v.g={role,senderId:g.senderId,receiverId:g.receiverId,members:g.members,
   key:(pair||fin)?g.key:null,
   words:g.words.map(i=>WORDS[i]),wordIds:g.words.slice(),
-  round:g.round,used:g.used.slice(),
-  target:(role==='sender'&&['compose','answer','reveal'].includes(H.phase))?g.target:null,
-  history:g.rounds.map((atts,r)=>({
-   target:(r<g.round||fin||(r===g.round&&H.phase==='reveal'&&g.revealOk))?g.targets[r]:null,
-   atts:atts.map(a=>{const res={};for(const id in a.res){const x=a.res[id];res[id]={ok:x.ok,ans:(x.ok&&id!==g.receiverId&&id!==pid&&!fin)?-1:x.ans};}return {cipher:a.cipher,res};})
-  })),
+  round:g.round,used:g.used.slice(),alpha:!!g.alpha,
+  target:(role==='sender'&&['keypick','compose','answer','reveal'].includes(H.phase))?g.target:null,
+  history:g.rounds.map((atts,r)=>{
+   const done=r<g.round||fin||(r===g.round&&H.phase==='reveal'&&g.revealOk);
+   const knows=fin||pair||!(H.settings&&H.settings.hide)||atts.some(a=>a.res[pid]&&a.res[pid].ok);
+   return {done,
+   target:(done&&knows)?g.targets[r]:null,
+   atts:atts.map(a=>{const res={};for(const id in a.res){const x=a.res[id];res[id]={ok:x.ok,ans:(x.ok&&id!==pid&&!knows)?-1:x.ans};}return {cipher:a.cipher,res};})
+  };}),
   cipher:H.phase==='answer'?g.curCipher:null,
   answerers:H.phase==='answer'?answerers(g):H.phase==='keyguess'?interceptors(g):[],
   answered:H.phase==='answer'?Object.keys(g.answers):H.phase==='keyguess'?Object.keys(g.keyGuesses):[],
   myAnswer:(H.phase==='answer'&&pid in g.answers)?g.answers[pid]:null,
   myKey:(pid in g.keyGuesses)?g.keyGuesses[pid]:null,
   solved:Object.assign({},g.solved),solvedRound:g.solvedRound.slice(),
-  remain:live?Math.max(0,g.deadline-Date.now()):null,total:H.phase==='keyguess'?KEY_MS:ANSWER_MS,
+  remain:live?Math.max(0,g.deadline-Date.now()):null,total:H.phase==='keyguess'?KEY_MS:H.phase==='keypick'?KPICK_MS:ANSWER_MS,
+  keyChoices:(role==='sender'&&H.phase==='keypick')?g.keyChoices.slice():null,
   revealOk:g.revealOk,lost:g.lost,
   revived:(H.phase==='compose'&&g.rounds[g.round].length===0)?g.revived.slice():[],
   result:fin?Object.assign({},g.result,{keyGuesses:Object.assign({},g.keyGuesses),targets:g.targets.slice()}):null
  };
  return v;
 }
+function saveHost(){
+ if(testMode||!isHost)return;
+ try{localStorage.setItem('angoHost',JSON.stringify({t:Date.now(),code:roomCode,botSeq,H}));}catch(e){}
+}
 function broadcast(){
+ saveHost();
  for(const p of H.players){
   if(p.bot)continue;
   if(p.id===myId){applyView(viewFor(myId));continue;}
@@ -437,12 +971,15 @@ function hostRecv(peerId,d,c){
  if(!d||typeof d!=='object')return;
  const pid=alias[peerId]||peerId;
  if(d.t==='join'){
-  const name=String(d.name||'').trim().slice(0,10)||'名無し';
-  const off=H.players.find(p=>!p.online&&!p.bot&&p.name===name);
-  if(off){alias[peerId]=off.id;conns[off.id]=c;off.online=true;broadcast();return;}
-  if(!(H.phase==='wait'||H.phase==='result')){c.send({t:'err',msg:'ゲーム進行中です。終了後に参加してください'});return;}
+  const name=String(d.name||'').trim().slice(0,10)||'名無し',tok=String(d.tok||'');
+  const back=(tok&&H.players.find(p=>!p.bot&&p.tok===tok&&p.id!==myId))||H.players.find(p=>!p.online&&!p.bot&&p.name===name);
+  if(back){
+   const old=conns[back.id];alias[peerId]=back.id;conns[back.id]=c;back.online=true;if(tok)back.tok=tok;
+   if(old&&old!==c){try{old.close();}catch(e){}}
+   broadcast();return;}
+  if(!(H.phase==='wait'||H.phase==='result'||H.phase==='final')){c.send({t:'err',msg:'ゲーム進行中です。終了後に参加してください'});return;}
   if(H.players.length>=10){c.send({t:'err',msg:'満員です（最大10人）'});return;}
-  conns[peerId]=c;addPlayer(peerId,name,false);broadcast();return;
+  conns[peerId]=c;addPlayer(peerId,name,false);pById(peerId).tok=tok;broadcast();return;
  }
  if(!pById(pid))return;
  handleAction(pid,d);
@@ -462,25 +999,47 @@ function hostDrop(c){
 /* ===== BOT（TESTルーム） ===== */
 const botDone=new Set();
 function scheduleBots(){
- if(!testMode||!H.game)return;
+ if(!H.game)return;
  const g=H.game,bots=H.players.filter(p=>p.bot).map(p=>p.id);
  const tag=H.gameNo+'-'+H.phase+'-'+g.round+'-'+(g.rounds[g.round]?g.rounds[g.round].length:0)+'-';
  const once=(id,ms,fn)=>{if(botDone.has(tag+id))return;botDone.add(tag+id);setTimeout(fn,ms);};
+ if(H.phase==='keypick'&&bots.includes(g.senderId))once(g.senderId,1500+rint(2000),()=>handleAction(g.senderId,{t:'keypick',k:g.keyChoices[rint(4)]}));
  if(H.phase==='compose'&&bots.includes(g.senderId))once(g.senderId,1800,()=>botCipher(g.senderId));
  if(H.phase==='answer')for(const id of answerers(g))if(bots.includes(id))once(id,1500+rint(6000),()=>botAnswer(id));
  if(H.phase==='keyguess')for(const id of interceptors(g))if(bots.includes(id))once(id,1500+rint(5000),()=>handleAction(id,{t:'keyguess',i:Math.random()<0.3?g.key:rint(KEYS.length)}));
 }
 function botCipher(id){
  const g=H.game;if(!g||H.phase!=='compose')return;
- const av=shuffle(KANA.filter(k=>!g.used.includes(k)));
- handleAction(id,{t:'cipher',text:av.slice(0,Math.min(av.length,2+rint(3))).join('')});
+ const tw=WORDS[g.target],A=!!g.alpha,conv=t=>A?toRoma(t):t,ok=t=>t&&!checkCipher(t,g.used,A).err;
+ const pick=list=>{let v=[...new Set(list.map(conv))].filter(ok);if(!v.length)return null;
+  const len=x=>A?x.length:kc(x).length;
+  const multi=v.filter(x=>len(x)>=2);if(multi.length)v=multi;
+  v.sort((x,y)=>len(x)-len(y));return shuffle(v.slice(0,5))[0];};
+ let text=null;
+ if(g.key<10){
+  const c=VOCAB.filter(w=>keyRule(g.key,tw.y,w));
+  if(g.key===9)c.push(...SUFFIX.map(sx=>tw.y+sx));
+  text=pick(c);
+ }
+ if(!text)text=pick(ASSOC[tw.w]||[]);
+ if(!text)text=pick(VOCAB);
+ if(!text){const av=shuffle(CS(g).filter(k=>!g.used.includes(k)));text=av.slice(0,Math.min(av.length,2)).join('');}
+ handleAction(id,{t:'cipher',text});
 }
 function botAnswer(id){
  const g=H.game;if(!g||H.phase!=='answer'||id in g.answers)return;
- const t=g.target,n=g.rounds[g.round].length;
- const p=id===g.receiverId?Math.min(0.9,0.45+0.2*n):0.15+0.05*n;
- let i=g.words.indexOf(t);
- if(Math.random()>p){const c=[...Array(WN).keys()].filter(x=>g.words[x]!==t);i=c[rint(c.length)];}
+ const t=g.target,n=g.rounds[g.round].length,tried=new Set();
+ g.rounds[g.round].forEach(a=>{for(const k in a.res){const x=a.res[k];if(!x.ok&&x.ans!=null)tried.add(x.ans);}});
+ const rest=[...Array(WN).keys()].filter(x=>!tried.has(g.words[x]));
+ let i;
+ if(id===g.receiverId){
+  const fit=rest.filter(x=>cipherFits(g.key,g.words[x],g.curCipher,g.alpha));
+  if(fit.length&&Math.random()<0.9)i=fit[rint(fit.length)];
+ }
+ if(i==null){
+  const p=id===g.receiverId?Math.min(0.8,0.3+0.2*n):0.12+0.05*n;
+  i=Math.random()<p?g.words.indexOf(t):rest[rint(rest.length)];
+ }
  handleAction(id,{t:'answer',i});
 }
 
@@ -489,44 +1048,142 @@ function lmsg(m){const e=document.getElementById('lmsg');if(e)e.textContent=m;}
 function randCode(){const s='ABCDEFGHJKLMNPQRSTUVWXYZ';let c='';for(let i=0;i<4;i++)c+=s[rint(s.length)];return c;}
 function startTest(name){
  testMode=true;isHost=true;myId='me';roomCode='TEST';H=newHost();
- addPlayer('me',name,false);for(let i=0;i<3;i++)addPlayer('bot'+i,'',true);
+ addPlayer('me',name,false);for(let i=0;i<3;i++)addBot();
  broadcast();
 }
-function hostRoom(name,code){
+let myTok='';try{myTok=localStorage.getItem('angoTok')||'';}catch(e){}
+if(!myTok){myTok=Math.random().toString(36).slice(2)+Date.now().toString(36);try{localStorage.setItem('angoTok',myTok);}catch(e){}}
+let netState='ok',retryTimer=null,joinInfo=null;
+function setNet(st){if(netState===st)return;netState=st;const b=document.getElementById('netbar');if(b)b.remove();
+ if(st!=='ok'){const d=document.createElement('div');d.id='netbar';d.className='netbar';d.textContent=st==='host'?'接続を復旧しています…（ホスト）':'接続が切れました。再接続しています…';document.body.appendChild(d);}}
+function saveJoin(){try{localStorage.setItem('angoJoin',JSON.stringify({t:Date.now(),code:roomCode,name:joinInfo.name}));}catch(e){}}
+function hostRoom(name,code,restore){
  if(typeof Peer==='undefined'){lmsg('通信ライブラリを読み込めませんでした');return;}
- lmsg('ルームを作成中…');
- peer=new Peer(PREFIX+code);
- peer.on('open',id=>{myId=id;isHost=true;roomCode=code;H=newHost();addPlayer(id,name,false);broadcast();});
- peer.on('connection',c=>{c.on('data',d=>hostRecv(c.peer,d,c));c.on('close',()=>hostDrop(c));});
- peer.on('error',e=>{if(e.type==='unavailable-id')lmsg('そのルームコードは使用中です');else if(!V)lmsg('接続エラー: '+e.type);else toast('通信エラー: '+e.type);});
+ lmsg(restore?'ルームを復旧中…':'ルームを作成中…');
+ let tries=0;
+ const open=()=>{
+  peer=new Peer(PREFIX+code);
+  peer.on('open',id=>{
+   myId=id;isHost=true;roomCode=code;
+   if(restore){restoreHost(restore);}else{H=newHost();addPlayer(id,name,false);pById(id).tok=myTok;}
+   setNet('ok');broadcast();
+  });
+  peer.on('connection',c=>{c.on('data',d=>hostRecv(c.peer,d,c));c.on('close',()=>hostDrop(c));c.on('error',()=>hostDrop(c));});
+  peer.on('disconnected',()=>{if(peer&&!peer.destroyed){setNet('host');setTimeout(()=>{try{peer.reconnect();}catch(e){}},1500);}});
+  peer.on('open',()=>setNet('ok'));
+  peer.on('error',e=>{
+   if(e.type==='unavailable-id'){
+    if(restore&&tries<20){tries++;try{peer.destroy();}catch(_){}lmsg('ルームを復旧中…（'+tries+'）');setTimeout(open,3000);return;}
+    lmsg('そのルームコードは使用中です');return;}
+   if(e.type==='network'||e.type==='server-error'||e.type==='socket-error'||e.type==='socket-closed'){setNet('host');setTimeout(()=>{try{peer.reconnect();}catch(_){}},2000);return;}
+   if(!V)lmsg('接続エラー: '+e.type);
+  });
+ };
+ open();
+}
+function restoreHost(sv){
+ H=sv.H;botSeq=sv.botSeq||0;if(!H.match)H.match={sets:3,cur:0,hist:[]};if(!H.settings)H.settings={hide:false,alpha:false};
+ for(const p of H.players)if(!p.bot&&p.id!==myId)p.online=false;
+ const me=pById(myId);if(me){me.online=true;me.tok=myTok;}
+ const g=H.game,left=g?Math.max(3000,(g.deadline||0)-Date.now()):0;
+ if(g&&H.phase==='answer')setT(left,endAnswer);
+ else if(g&&H.phase==='keyguess')setT(left,finishGame);
+ else if(g&&H.phase==='keypick')setT(left,()=>{if(H.game&&H.phase==='keypick')setKey(H.game.keyChoices[rint(4)]);});
+ else if(g&&H.phase==='reveal')setT(2500,afterReveal);
+ else if(H.phase==='result'&&H.match&&H.match.cur>=H.match.sets)setT(8000,()=>{if(H.phase==='result')toFinal();});
+ if(g&&['answer','keyguess','keypick'].includes(H.phase))g.deadline=Date.now()+left;
 }
 function joinRoom(name,code){
  if(typeof Peer==='undefined'){lmsg('通信ライブラリを読み込めませんでした');return;}
  lmsg('接続中…');
- peer=new Peer();
- peer.on('open',id=>{
-  myId=id;roomCode=code;
-  hostConn=peer.connect(PREFIX+code,{reliable:true});
-  hostConn.on('open',()=>hostConn.send({t:'join',name}));
-  hostConn.on('data',d=>{if(d.t==='view')applyView(d.v);else if(d.t==='err'){if(!V)lmsg(d.msg);else toast(d.msg);}});
-  hostConn.on('close',()=>toast('ホストとの接続が切れました'));
- });
- peer.on('error',e=>{if(e.type==='peer-unavailable')lmsg('ルームが見つかりません');else if(!V)lmsg('接続エラー: '+e.type);else toast('通信エラー: '+e.type);});
+ joinInfo={name,code};roomCode=code;saveJoin();
+ const connect=()=>{
+  if(hostConn){try{hostConn.close();}catch(e){}}
+  const c=peer.connect(PREFIX+code,{reliable:true});hostConn=c;
+  c.on('open',()=>{c.send({t:'join',name,tok:myTok});setNet('ok');clearTimeout(retryTimer);retryTimer=null;});
+  c.on('data',d=>{if(c!==hostConn)return;if(d.t==='view'){applyView(d.v);saveJoin();}else if(d.t==='err'){if(!V)lmsg(d.msg);else toast(d.msg);}});
+  c.on('close',()=>{if(c===hostConn)lost();});
+  c.on('error',()=>{if(c===hostConn)lost();});
+ };
+ const lost=()=>{
+  if(!V){return;}
+  setNet('lost');
+  if(retryTimer)return;
+  retryTimer=setTimeout(function again(){
+   retryTimer=null;
+   if(hostConn&&hostConn.open){setNet('ok');return;}
+   if(!peer||peer.destroyed){startPeer();}
+   else if(peer.disconnected){try{peer.reconnect();}catch(e){}}
+   else connect();
+   retryTimer=setTimeout(again,3000);
+  },1500);
+ };
+ const startPeer=()=>{
+  peer=new Peer();
+  peer.on('open',id=>{myId=myId||id;connect();});
+  peer.on('disconnected',()=>{lost();});
+  peer.on('error',e=>{
+   if(e.type==='peer-unavailable'){if(!V)lmsg('ルームが見つかりません');else lost();return;}
+   if(!V)lmsg('接続エラー: '+e.type);else lost();
+  });
+ };
+ startPeer();
+ window.addEventListener('online',()=>{if(V)lost();});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&V&&!(hostConn&&hostConn.open))lost();});
 }
-function act(a){if(isHost)handleAction(myId,a);else if(hostConn&&hostConn.open)hostConn.send(a);}
+function act(a){if(isHost)handleAction(myId,a);else if(hostConn&&hostConn.open)hostConn.send(a);else toast('再接続中です。少し待ってからもう一度操作してください');}
 
 /* ===== クライアント表示 ===== */
+/* ===== 戦績（端末に保存） ===== */
+const STAT0={matches:0,wins:0,ansRounds:0,ansOk:0,keyTries:0,keyHits:0,pairSets:0,perfect:0,sets:0};
+function loadStats(){try{return Object.assign({},STAT0,JSON.parse(localStorage.getItem('angoStats')||'{}'));}catch(e){return Object.assign({},STAT0);}}
+function saveStats(st){try{localStorage.setItem('angoStats',JSON.stringify(st));}catch(e){}}
+function markDone(k){let d=[];try{d=JSON.parse(localStorage.getItem('angoStatDone')||'[]');}catch(e){}if(d.includes(k))return false;d.push(k);if(d.length>200)d=d.slice(-200);try{localStorage.setItem('angoStatDone',JSON.stringify(d));}catch(e){}return true;}
+function recordStats(v){
+ const g=v.g,M=v.match;if(!M||!M.id)return;
+ const base=v.code+'-'+M.id;
+ if(v.phase==='result'&&g&&g.result&&g.role!=='spec'){
+  if(!markDone(base+'-s'+M.cur))return;
+  const st=loadStats(),me=v.me,r=g.result;st.sets++;
+  if(g.role==='receiver'||g.role==='inter'){
+   g.history.forEach(h=>{if(!h.atts.length)return;st.ansRounds++;if(h.atts.some(a=>a.res[me]&&a.res[me].ok))st.ansOk++;});
+  }
+  if(g.role==='inter'){st.keyTries++;if(r.keyGuesses[me]===g.key)st.keyHits++;}
+  if(g.role==='sender'||g.role==='receiver'){st.pairSets++;if(!g.lost&&r.right===0)st.perfect++;}
+  saveStats(st);
+ }
+ if(v.phase==='final'&&v.players.some(p=>p.id===v.me)&&M.hist.some(h=>v.me in h.scores)){
+  if(!markDone(base+'-final'))return;
+  const st=loadStats(),mx=Math.max(...v.players.map(p=>p.total)),mine=v.players.find(p=>p.id===v.me);
+  st.matches++;if(mine&&mine.total===mx)st.wins++;saveStats(st);
+ }
+}
+function pct(a,b){return b?Math.round(a/b*100)+'%':'—';}
+function statsHtml(){
+ const st=loadStats();
+ const row=(lb,num,den,unit,note)=>`<div class="strow"><div class="stl">${lb}<span class="sub">${note}</span></div><div class="stv"><b>${num}</b><span class="sub">${den!=null?' / '+den+unit:unit}</span></div><div class="stp">${den!=null?pct(num,den):''}</div>${den!=null?`<div class="stbar"><i style="width:${den?Math.round(num/den*100):0}%"></i></div>`:''}</div>`;
+ return `<div class="modal" data-act="close"><div class="sheet" data-stop="1"><h3>戦績 <button class="ghost small" data-act="close">閉じる</button></h3>
+ <div class="stats">
+ ${row('対戦数',st.matches,null,' 戦','最終結果まで遊んだ回数')}
+ ${row('優勝',st.wins,st.matches,' 戦','同点優勝を含む')}
+ ${row('正答',st.ansOk,st.ansRounds,' ラウンド','受信者・スパイとして単語を当てた')}
+ ${row('鍵当て成功',st.keyHits,st.keyTries,' 回','スパイとして鍵を当てた')}
+ ${row('完全鍵秘匿',st.perfect,st.pairSets,' セット','送受信者として3語伝え、誰にも鍵を当てられなかった')}
+ </div><div class="note">プレイしたセット数：${st.sets}　※この端末に保存されています</div>
+ <button class="ghost small" style="margin-top:12px" data-act="statreset">戦績をリセット</button></div></div>`;
+}
 function applyView(v){
  const prev=V;V=v;
+ try{recordStats(v);}catch(e){}
  const g=v.g;
  localDeadline=(g&&g.remain!=null)?performance.now()+g.remain:null;if(g&&g.total)localTotal=g.total;
  const key=v.gameNo+'-'+v.phase+'-'+(g?g.round:'')+'-'+(g&&g.history[g.round]?g.history[g.round].atts.length:0);
  if(key!==local.phaseKey){
   local.phaseKey=key;local.sel=null;local.keySel=null;local.buf=[];lastTick=-1;
   if(prev&&prev.phase!==v.phase){
-   if(v.phase==='answer')SE.send();
+   if(v.phase==='answer')notifyCipher();
    else if(v.phase==='reveal')(g.revealOk?SE.ok:SE.ng)();
-   else if(v.phase==='result')SE.end();
+   else if(v.phase==='result'||v.phase==='final')SE.end();
   }
  }
  render();
@@ -541,9 +1198,22 @@ function wordLabel(g,gi){const w=WORDS[gi];return w?w.w:'？';}
 function av(id,cls){const p=V.players.find(x=>x.id===id);return `<span class="av ${cls||''}">${p?animalSvg(p.a):''}</span>`;}
 function who(id){return `<span class="who">${av(id)}<span class="wn">${esc(pname(id))}</span></span>`;}
 
+function savedSess(){
+ const out={};const lim=3*3600*1000;
+ try{const h=JSON.parse(localStorage.getItem('angoHost')||'null');if(h&&Date.now()-h.t<lim)out.host=h;}catch(e){}
+ try{const j=JSON.parse(localStorage.getItem('angoJoin')||'null');if(j&&Date.now()-j.t<lim)out.join=j;}catch(e){}
+ if(out.host&&out.join)(out.host.t>out.join.t?delete out.join:delete out.host);
+ return out;
+}
+function resumeHtml(){
+ const sv=savedSess();
+ if(sv.host)return `<div class="card"><h3>前回のルーム</h3><div class="sub">ホストとして作成した ${esc(sv.host.code)} を復旧できます。参加者は自動で戻ってきます。</div><button class="primary big" data-act="resumehost">ルーム ${esc(sv.host.code)} を復旧</button><button class="ghost small" style="margin-top:8px" data-act="forget">記録を消す</button></div>`;
+ if(sv.join)return `<div class="card"><h3>前回のルーム</h3><div class="sub">${esc(sv.join.name)} として参加していた ${esc(sv.join.code)} に戻れます。</div><button class="primary big" data-act="resumejoin">ルーム ${esc(sv.join.code)} に再接続</button><button class="ghost small" style="margin-top:8px" data-act="forget">記録を消す</button></div>`;
+ return '';
+}
 function renderLobby(){
  let saved='';try{saved=localStorage.getItem('angoName')||'';}catch(e){}
- $app.innerHTML=`<div class="hero"><div class="logo">ANGO</div><div class="sub" style="margin-top:6px">鍵を知る相手にだけ、言葉を届けろ。</div></div>
+ $app.innerHTML=`<div class="hero"><span class="stamp">極秘</span><div class="logo">ANGO</div><div class="cls">CLASSIFIED · CIPHER PARTY GAME</div><div class="tagline">鍵を知る相手にだけ、言葉を届けろ。</div></div>
  <div class="card">
  <label>名前<input id="nm" maxlength="10" value="${esc(saved)}" placeholder="10文字まで"></label>
  <label>ルームコード<input id="rc" maxlength="8" placeholder="作成時は空欄で自動" autocapitalize="characters"></label>
@@ -551,17 +1221,23 @@ function renderLobby(){
  <button class="big" data-act="join">ルームに参加</button>
  <div class="err" id="lmsg"></div>
  <div class="note center">コードに「TEST」と入れるとBOTとソロテスト</div>
- </div>
- <div class="foot"><button class="ghost" data-act="rules">ルールを読む</button></div>${modalHtml()}`;
+ </div>${resumeHtml()}
+ <div class="foot"><button class="ghost" data-act="rules">ルールを読む</button> <button class="ghost" data-act="stats">戦績</button></div>${modalHtml()}`;
 }
 function render(){
  if(!V){renderLobby();return;}
+ if(V.phase==='final'){$app.innerHTML=finalHtml()+modalHtml();return;}
  if(V.phase==='wait'||!V.g){$app.innerHTML=waitHtml()+modalHtml();return;}
  $app.innerHTML=gameHtml()+modalHtml();
  tickTimer();
 }
 function topBar(extra){
  return `<div class="top"><div class="logo">ANGO</div><div style="display:flex;gap:6px;align-items:center">${extra||''}<button class="ghost small" data-act="keys">${IC.key} 鍵</button><button class="ghost small" data-act="rules">ルール</button></div></div>`;
+}
+function botBtn(){
+ if(!V.host)return '';
+ const full=V.players.length>=10;
+ return `<button class="big" data-act="addbot" ${full?'disabled':''}>＋ BOTを追加${full?'（満員）':''}</button>`;
 }
 function pickerHtml(){
  const ps=V.players.filter(p=>p.online),pk=V.pick||{};
@@ -570,14 +1246,33 @@ function pickerHtml(){
   if(!V.host)return `<div class="pkrow"><span class="tag ${cls}">${label}</span>${cur?who(cur):'<span class="sub">おまかせ（ランダム）</span>'}</div>`;
   return `<div class="pkrow"><span class="tag ${cls}">${label}</span><div class="pkchips"><button class="pk ${!cur?'on':''}" data-act="pick" data-role="${role}" data-id="">おまかせ</button>${ps.map(p=>`<button class="pk ${cur===p.id?'on':''}" data-act="pick" data-role="${role}" data-id="${esc(p.id)}" ${other===p.id?'disabled':''}>${av(p.id)}${esc(p.name)}</button>`).join('')}</div></div>`;
  };
- return `<div class="card"><h3>次のゲームの役割</h3>${row('s','送信者','t-send')}${row('r','受信者','t-recv')}${V.host?'<div class="note">選ばなかった役割はランダムで決まります</div>':''}</div>`;
+ return `<div class="card"><h3>次のセットの役割</h3>${row('s','送信者','t-send')}${row('r','受信者','t-recv')}${V.host?'<div class="note">選ばなかった役割はランダムで決まります</div>':''}</div>`;
+}
+function modeHtml(){
+ const a=V.settings.alpha;
+ if(!V.host)return `<div class="moderow"><span class="sub">文字</span><b>${a?'アルファベット版：アルファベット(26文字)':'ひらがな版：五十音(47文字)'}</b></div>`;
+ return `<div class="moderow"><span class="sub">文字</span><div class="seg"><button class="${a?'':'on'}" data-act="alpha" data-on="0">ひらがな版<small>五十音(47文字)</small></button><button class="${a?'on':''}" data-act="alpha" data-on="1">アルファベット版<small>アルファベット(26文字)</small></button></div></div>`;
+}
+function hideHtml(){
+ const on=V.settings.hide;
+ const body=`<span class="chkmark ${on?'on':''}">${on?IC.ok:''}</span><span>受信者が当てた正解をスパイに伏せる<br><span class="sub">${on?'オン：正解は当てた人と送信者・受信者だけに見える':'オフ：受信者が当てると全員に正解が公開される'}</span></span>`;
+ if(!V.host)return `<div class="chkrow">${body}</div>`;
+ return `<label class="chkrow"><input type="checkbox" data-act="hide" ${on?'checked':''}>${body}</label>`;
+}
+function setsHtml(){
+ const n=V.match.sets;
+ if(!V.host)return `<div class="card"><h3>ルーム設定</h3><div class="setrow"><b class="setn">${n}</b><span class="sub">セット（1セット＝3ラウンド・ペアは毎セット交代）</span></div>${modeHtml()}${hideHtml()}</div>`;
+ return `<div class="card"><h3>ルーム設定</h3><div class="setrow"><button class="setb" data-act="sets" data-n="${n-1}" ${n<=1?'disabled':''}>−</button><b class="setn">${n}</b><button class="setb" data-act="sets" data-n="${n+1}" ${n>=10?'disabled':''}>＋</button><span class="sub">セット<br>1セット＝3ラウンド</span></div>
+ <div class="setq">${[1,2,3,5].map(k=>`<button class="pk ${k===n?'on':''}" data-act="sets" data-n="${k}">${k}</button>`).join('')}<button class="pk ${n===V.players.length?'on':''}" data-act="sets" data-n="${Math.min(10,V.players.length)}">全員1回ずつ（${Math.min(10,V.players.length)}）</button></div>
+ <div class="note">ペアは毎セット交代。送信者はなるべく全員に回るように選ばれます</div>${modeHtml()}${hideHtml()}</div>`;
 }
 function waitHtml(){
  const n=V.players.filter(p=>p.online).length;
  return topBar()+`<div class="card center"><div class="sub">ルームコード</div><div class="code">${esc(V.code)}</div><div class="sub">${V.test?'BOTとのテストルーム':'このコードを伝えて参加してもらおう'}</div></div>
  <div class="card"><h3>参加者 ${n}人</h3>${playerList()}</div>
- ${pickerHtml()}
- ${V.host?`<button class="primary big" data-act="start" ${n<3?'disabled':''}>ゲーム開始</button><div class="note center">3〜10人で遊べます</div>`:'<div class="note center" style="margin-top:14px">ホストの開始を待っています</div>'}`;
+ ${botBtn()}
+ ${setsHtml()}
+ ${V.host?`<button class="primary big" data-act="start" ${n<3?'disabled':''}>ゲーム開始（全${V.match.sets}セット）</button><div class="note center">3〜10人で遊べます（BOTを含む）</div>`:'<div class="note center" style="margin-top:14px">ホストの開始を待っています</div>'}`;
 }
 function playerList(){
  const g=V.g;
@@ -586,10 +1281,11 @@ function playerList(){
   if(g&&V.phase!=='wait'){
    if(p.id===g.senderId)tag='<span class="tag t-send">送信者</span>';
    else if(p.id===g.receiverId)tag='<span class="tag t-recv">受信者</span>';
-   else if(g.members.includes(p.id))tag=`<span class="tag t-inter">傍受 ${g.solved[p.id]||0}解読</span>`;
+   else if(g.members.includes(p.id))tag=`<span class="tag t-inter">スパイ ${g.solved[p.id]||0}解読</span>`;
   }
   const done=g&&g.solvedRound.includes(p.id)&&V.phase!=='result'?`<span class="hid">${IC.lock}</span>`:'';
-  return `<div class="pl ${p.online?'':'off'}">${av(p.id,'md')}<span class="nm">${esc(p.name)}${p.id===V.me?' <span class="sub">(あなた)</span>':''}${p.online?'':' <span class="sub">切断</span>'}</span>${done}${tag}<span class="pts">${p.total}</span></div>`;
+  const canPick=p.id===V.me&&(V.phase==='wait'||V.phase==='result'||V.phase==='final');
+  return `<div class="pl ${p.online?'':'off'}">${canPick?`<button class="avbtn" data-act="avmodal">${av(p.id,'md')}<span>変更</span></button>`:av(p.id,'md')}<span class="nm">${esc(p.name)}${p.id===V.me?' <span class="sub">(あなた)</span>':''}${p.online?'':' <span class="sub">切断</span>'}</span>${done}${tag}<span class="pts">${p.total}</span>${p.bot&&V.host&&(V.phase==='wait'||V.phase==='result'||V.phase==='final')?`<button class="rmbot" data-act="rmbot" data-id="${esc(p.id)}" aria-label="BOTを外す">${IC.ng}</button>`:''}</div>`;
  }).join('')}</div>`;
 }
 function roleCard(g){
@@ -598,7 +1294,7 @@ function roleCard(g){
  const meAv=`<span style="display:flex;align-items:center;gap:8px;margin-top:8px">${av(V.me,'lg')}`;
  if(r==='sender')h+=`${meAv}<span class="role t-send">あなたは送信者</span></span>`;
  else if(r==='receiver')h+=`${meAv}<span class="role t-recv">あなたは受信者</span></span>`;
- else if(r==='inter')h+=`${meAv}<span><span class="role">あなたは傍受者</span><br><span class="sub">暗号と履歴から、単語と鍵を推理しよう</span></span></span>`;
+ else if(r==='inter')h+=`${meAv}<span><span class="role">あなたはスパイ</span><br><span class="sub">暗号と履歴から、単語と鍵を推理しよう</span></span></span>`;
  else h+=`${meAv}<span class="role">観戦中</span></span>`;
  if(g.key!=null&&V.phase!=='result')h+=`<div class="keybox">${IC.key}<div><div class="sub">鍵</div>${ktag(KEYS[g.key])} <b>${esc(KEYS[g.key].n)}</b> <span class="sub">例：${esc(KEYS[g.key].ex)}</span></div></div>`;
  if(g.target!=null)h+=`<div class="tgbox">${IC.eye}<div><div class="sub" style="color:inherit">伝える単語</div><b>${esc(wordLabel(g,g.target))}</b></div></div>`;
@@ -607,6 +1303,7 @@ function roleCard(g){
 function timerHtml(){return '';}
 function stickyHtml(g){
  const ph=V.phase;
+ if(ph==='keypick')return `<div class="sticky" id="sticky"><div class="sk-row"><div class="sk-ci"><div class="sk-lb">準備中</div><div class="sk-kg">${IC.key} ${g.role==='sender'?'鍵を選んでください':'送信者が鍵を選んでいます'}</div></div><div class="sk-time" id="timerBox"><span id="timer">--</span><small>秒</small></div></div><div class="sk-bar"><i id="timerBar"></i></div></div>`;
  const tm=()=>`<div class="sk-time" id="timerBox"><span id="timer">--</span><small>秒</small></div>`;
  const bar='<div class="sk-bar"><i id="timerBar"></i></div>';
  if(ph==='answer')return `<div class="sticky" id="sticky"><div class="sk-row"><div class="sk-ci"><div class="sk-lb">暗号</div><div class="sk-cipher">${esc(g.cipher)}</div></div>${tm()}</div>${bar}</div>`;
@@ -618,10 +1315,14 @@ function stickyHtml(g){
 function phaseHtml(g){
  const me=V.me,ph=V.phase;
  const waitChips=()=>`<div class="chips">${g.answerers.map(id=>`<span class="chip ${g.answered.includes(id)?'done':''}">${av(id)}${esc(pname(id))}${g.answered.includes(id)?IC.ok:''}</span>`).join('')}</div>`;
+ if(ph==='keypick'){
+  if(g.role==='sender')return `<div class="phase"><div class="head">${IC.key} 今回の鍵を選ぶ</div><div class="sub">4つの候補から1つ選ぼう。選んだ鍵は受信者にだけ伝わり、3ラウンド共通で使う。時間切れならランダムで決まる。</div><div class="keys" style="margin-top:8px">${g.keyChoices.map(k=>`<button class="keyitem kpc" data-act="kpick" data-k="${k}">${ktag(KEYS[k])}<span class="kpn"><b>${esc(KEYS[k].n)}</b><span class="sub">例：${esc(KEYS[k].ex)}</span></span></button>`).join('')}</div></div>`;
+  return `<div class="phase"><div class="head">${esc(pname(g.senderId))} が今回の鍵を選んでいます…</div><div class="sub">${g.role==='receiver'?'選ばれた鍵はあなたにだけ表示されます':'鍵は4つの候補から選ばれます'}</div></div>`;
+ }
  if(ph==='compose'){
   const rv=g.revived.length||g.round>0&&!g.history[g.round].atts.length?`<div class="revived">${IC.ok} ラウンド${g.round+1}開始 — 単語リストを入れ替え${g.revived.length?`／${g.revived.length}文字が復活：<b>${g.revived.map(esc).join(' ')}</b>`:''}</div>`:'';
-  if(g.role==='sender')return `<div class="phase">${rv}<div class="head">暗号を作って送信</div><div class="sub">下の50音表から文字を選ぼう。使った文字はそのラウンド中は使えない。</div>${composeHtml(g)}</div>`;
-  return `<div class="phase">${rv}<div class="head">${esc(pname(g.senderId))} が暗号を作成中…</div><div class="sub">残り ${KANA.length-g.used.length} 文字</div></div>`;
+  if(g.role==='sender')return `<div class="phase">${rv}<div class="head">暗号を作って送信</div><div class="sub">下の${g.alpha?'キーボード':'五十音表'}から文字を選ぼう。使った文字はそのラウンド中は使えない。</div>${composeHtml(g)}</div>`;
+  return `<div class="phase">${rv}<div class="head">${esc(pname(g.senderId))} が暗号を作成中…</div><div class="sub">残り ${CS(g).length-g.used.length} 文字</div></div>`;
  }
  if(ph==='answer'){
   const can=g.answerers.includes(me)&&g.myAnswer==null;
@@ -635,7 +1336,7 @@ function phaseHtml(g){
  if(ph==='reveal'){
   const h=g.history[g.round],a=h.atts[h.atts.length-1];
   let head;
-  if(g.revealOk)head=`<div class="head ok">${IC.ok} 受信者が正解！</div><div>伝えた単語は「<b>${esc(wordLabel(g,h.target))}</b>」</div>`;
+  if(g.revealOk)head=`<div class="head ok">${IC.ok} 受信者が正解！</div><div>${h.target!=null?`伝えた単語は「<b>${esc(wordLabel(g,h.target))}</b>」`:`<span class="sub">${IC.lock} 正解の単語は伏せられています</span>`}</div>`;
   else if(g.lost)head=`<div class="head ng">${IC.ng} 受信者は不正解</div><div>文字を使い切りました。ペアの負け</div>`;
   else head=`<div class="head ng">${IC.ng} 受信者は不正解</div><div class="sub">送信者が暗号を作り直します</div>`;
   return `<div class="phase ${g.revealOk?'okbg':'ngbg'}">${head}${attRows(g,a)}</div>`;
@@ -643,7 +1344,7 @@ function phaseHtml(g){
  if(ph==='keyguess'){
   const lostMsg=g.lost?'<div class="sub ng">ペアは文字切れで負け。</div>':'<div class="sub ok">3語すべて伝達成功。</div>';
   if(g.role==='inter'&&g.myKey==null)return `<div class="phase"><div class="head" style="justify-content:space-between"><span>${IC.key} 鍵はどれ？</span>${timerHtml()}</div>${lostMsg}<div class="sub">当てると解読ポイントが2倍</div><div class="keys" style="margin-top:8px">${KEYS.map((k,i)=>`<button class="keyitem ${local.keySel===i?'sel':''}" data-act="keysel" data-i="${i}"><span class="no">${i+1}</span>${ktag(k)}<span>${esc(k.n)}</span></button>`).join('')}</div><button class="primary big" data-act="keydecide" ${local.keySel==null?'disabled':''}>決定</button></div>`;
-  return `<div class="phase"><div class="head" style="justify-content:space-between"><span>傍受者が鍵を推理中…</span>${timerHtml()}</div>${lostMsg}${g.myKey!=null?`<div class="sub">あなたの回答：${esc(KEYS[g.myKey].n)}</div>`:''}${waitChips()}</div>`;
+  return `<div class="phase"><div class="head" style="justify-content:space-between"><span>スパイが鍵を推理中…</span>${timerHtml()}</div>${lostMsg}${g.myKey!=null?`<div class="sub">あなたの回答：${esc(KEYS[g.myKey].n)}</div>`:''}${waitChips()}</div>`;
  }
  if(ph==='result')return resultHtml(g);
  return '';
@@ -660,16 +1361,26 @@ function attRows(g,a){
  }).join('')}</div>`;
 }
 function composeHtml(g){
- const n=local.buf.filter(c=>c!=='ー').length;
+ const n=local.buf.length;
+ if(g.alpha)return `<div style="margin-top:8px"><div class="buf alpha">${local.buf.length?local.buf.map(esc).join(''):'<span class="ph">文字を選んでください</span>'}</div>
+ ${kanaBoard(g,true)}
+ <div class="ctrl ctrl-a"><button data-act="bs" aria-label="1文字消す">${IC.back} 1文字消す</button><button class="primary" data-act="send" ${n?'':'disabled'}>送信</button></div>
+ <div class="note">今回 ${n} 文字使用 ／ 残り ${ALPHA.length-g.used.length-n} 文字。ローマ字や英単語で暗号を作ろう。</div></div>`;
  return `<div style="margin-top:8px"><div class="buf">${local.buf.length?local.buf.map(esc).join(''):'<span class="ph">文字を選んでください</span>'}</div>
  ${kanaBoard(g,true)}
- <div class="ctrl"><button data-act="dak">゛゜</button><button data-act="small">小</button><button data-act="bar">ー</button><button data-act="bs" aria-label="1文字消す">${IC.back}</button><button class="primary" data-act="send" ${n?'':'disabled'}>送信</button></div>
- <div class="note">今回 ${n} 文字使用 ／ 残り ${KANA.length-g.used.length-n} 文字。濁点・半濁点・小文字は元の文字を消費、「ー」は消費なし。</div></div>`;
+ <div class="ctrl"><button data-act="dak">゛゜</button><button data-act="small">小</button><button data-act="bs" aria-label="1文字消す">${IC.back}</button><button class="primary" data-act="send" ${n?'':'disabled'}>送信</button></div>
+ <div class="note">今回 ${n} 文字使用 ／ 残り ${KANA.length-g.used.length-n} 文字。濁点・半濁点・小文字は元の文字を消費。長音「ー」も1文字として消費。</div></div>`;
 }
 function kanaBoard(g,editable){
- const used=new Set(g.used),inBuf=new Set(local.buf.map(norm));
+ const used=new Set(g.used),inBuf=new Set(local.buf.map(c=>baseOf(c,g.alpha)));
+ if(g.alpha){
+  return `<div class="qwerty">${QWERTY.map((row,ri)=>`<div class="qrow r${ri}">${row.split('').map(k=>{
+   const c=['kt','qk'];if(used.has(k))c.push('used');else if(editable&&inBuf.has(k))c.push('inbuf');
+   const can=editable&&!used.has(k)&&!inBuf.has(k);
+   return `<button class="${c.join(' ')}" ${can?`data-act="tile" data-k="${k}"`:'disabled'}>${k}</button>`;}).join('')}</div>`).join('')}</div>`;
+ }
  let h='<div class="kana">';
- for(let d=0;d<5;d++)for(let r=0;r<11;r++){
+ for(let d=0;d<5;d++)for(let r=10;r>=0;r--){
   const k=KANA_ROWS[r][d];
   if(!k){h+='<span class="kt empty"></span>';continue;}
   const c=['kt'];if(used.has(k))c.push('used');else if(editable&&inBuf.has(k))c.push('inbuf');
@@ -696,10 +1407,10 @@ function historyHtml(g){
  const out=[];
  g.history.forEach((h,r)=>{
   if(!h.atts.length)return;
-  const done=h.target!=null;
+  const done=h.done;
   out.unshift(`<div class="lround ${done?'done':''}">
-   <div class="lrh"><span class="lrno">R${r+1}</span>${done?`<span class="sub">正解</span><b class="lrt">${esc(wordLabel(g,h.target))}</b>`:'<span class="sub">進行中</span>'}<span class="lrc">送信 ${h.atts.length}回</span></div>
-   ${h.atts.map((a,i)=>`<div class="latt"><div class="lah"><span class="lno">${i+1}</span><span class="cchip">${esc(a.cipher)}</span><span class="lcnt">${[...a.cipher].filter(c=>c!=='ー').length}文字</span></div>${attRows(g,a)}</div>`).join('')}
+   <div class="lrh"><span class="lrno">R${r+1}</span>${done?(h.target!=null?`<span class="sub">正解</span><b class="lrt">${esc(wordLabel(g,h.target))}</b>`:`<span class="sub">正解</span><b class="lrt hid">${IC.lock} 伏せ</b>`):'<span class="sub">進行中</span>'}<span class="lrc">送信 ${h.atts.length}回</span></div>
+   ${h.atts.map((a,i)=>`<div class="latt"><div class="lah"><span class="lno">${i+1}</span><span class="cchip">${esc(a.cipher)}</span><span class="lcnt">${[...a.cipher].length}文字</span></div>${attRows(g,a)}</div>`).join('')}
   </div>`);
  });
  return out.join('');
@@ -709,45 +1420,75 @@ function resultHtml(g){
  const rows=g.members.map(id=>{
   let role,detail;
   if(id===g.senderId||id===g.receiverId){role=id===g.senderId?'<span class="tag t-send">送信</span>':'<span class="tag t-recv">受信</span>';detail=g.lost?'伝達失敗':`外した${r.wrong}人 − 当てた${r.right}人`;}
-  else{const kg=r.keyGuesses[id],kr=kg===g.key;role='<span class="tag t-inter">傍受</span>';detail=`解読${g.solved[id]||0}${kr?' ×2':''}<br><span class="sub">鍵:${kg==null?'未回答':esc(KEYS[kg].n)}</span> <span class="${kr?'ok':'ng'}">${kr?IC.ok:IC.ng}</span>`;}
+  else{const kg=r.keyGuesses[id],kr=kg===g.key;role='<span class="tag t-inter">スパイ</span>';detail=`解読${g.solved[id]||0}${kr?' ×2':''}<br><span class="sub">鍵:${kg==null?'未回答':esc(KEYS[kg].n)}</span> <span class="${kr?'ok':'ng'}">${kr?IC.ok:IC.ng}</span>`;}
   const tot=(V.players.find(p=>p.id===id)||{}).total;
   return `<tr><td><span style="display:flex;gap:6px;align-items:flex-start">${av(id,'md')}<span>${esc(pname(id))}<br>${role}</span></span></td><td>${detail}</td><td class="num">${r.scores[id]>0?'+':''}${r.scores[id]}</td><td class="num">${tot==null?'-':tot}</td></tr>`;
  }).join('');
- return `<div class="phase ${g.lost?'ngbg':'okbg'}"><div class="bigres">${g.lost?'ペアの負け':'3語の伝達成功'}</div>
+ return `<div class="phase ${g.lost?'ngbg':'okbg'}"><div class="sub center" style="letter-spacing:.2em">SET ${V.match.cur} / ${V.match.sets}</div><div class="bigres">${g.lost?'ペアの負け':'3語の伝達成功'}</div>
  <div class="keybox" style="margin-top:10px">${IC.key}<div><div class="sub">鍵の正体</div>${ktag(k)} <b>${esc(k.n)}</b> <span class="sub">例：${esc(k.ex)}</span></div></div>
  <div class="sub" style="margin-top:8px">伝える単語：${r.targets.map((t,i)=>`R${i+1}「${esc(wordLabel(g,t))}」`).join(' ')}</div>
- <table style="margin-top:8px"><tr><th>プレイヤー</th><th>内訳</th><th style="text-align:right">今回</th><th style="text-align:right">累計</th></tr>${rows}</table>
- </div>${pickerHtml()}
- ${V.host?'<button class="primary big" data-act="start">次のゲームを開始</button>':'<div class="note center">ホストが次のゲームを開始するのを待っています</div>'}`;
+ <table style="margin-top:8px"><tr><th>プレイヤー</th><th>内訳</th><th style="text-align:right">今セット</th><th style="text-align:right">累計</th></tr>${rows}</table>
+ </div>${(()=>{const M=V.match,last=M.cur>=M.sets;
+  if(last)return V.host?`<button class="primary big" data-act="final">最終結果へ</button><div class="note center">まもなく自動で最終結果に移ります</div>`:'<div class="note center">まもなく最終結果に移ります</div>';
+  return `${V.host?`<button class="primary big" data-act="start">次のセットへ（${M.cur+1}/${M.sets}）</button>`:'<div class="note center">ホストが次のセットを開始するのを待っています</div>'}`;})()}`;
+}
+function finalHtml(){
+ const M=V.match,ps=V.players.slice().sort((a,b)=>b.total-a.total);
+ let rank=0,prev=null;
+ const rk=ps.map((p,i)=>{if(p.total!==prev){rank=i+1;prev=p.total;}return {p,rank};});
+ const top=rk.filter(x=>x.rank===1);
+ const head=`<div class="final-hero"><div class="cls">MISSION COMPLETE · ${M.sets} SETS</div><div class="final-title">最終結果</div>
+  <div class="podium">${top.map(x=>`<div class="pod1">${av(x.p.id,'xl')}<b>${esc(x.p.name)}</b><span class="pts">${x.p.total}</span></div>`).join('')}</div>
+  <div class="sub">${top.length>1?'同点優勝':'優勝'}</div></div>`;
+ const list=`<div class="card"><h3>順位</h3><div class="plist">${rk.map(({p,rank})=>`<div class="pl rk${rank}"><span class="rkn">${rank}</span>${av(p.id,'md')}<span class="nm">${esc(p.name)}${p.id===V.me?' <span class="sub">(あなた)</span>':''}</span><span class="pts">${p.total}</span></div>`).join('')}</div></div>`;
+ const sets=`<div class="card"><h3>セットごとの得点</h3><div class="tblwrap"><table class="settbl"><tr><th>プレイヤー</th>${M.hist.map(h=>`<th>S${h.set}</th>`).join('')}<th>計</th></tr>${rk.map(({p})=>`<tr><td><span class="who">${av(p.id)}${esc(p.name)}</span></td>${M.hist.map(h=>{const v=h.scores[p.id];const role=p.id===h.s?'t-send':p.id===h.r?'t-recv':'';return `<td class="num ${role}">${v==null?'-':v}</td>`;}).join('')}<td class="num">${p.total}</td></tr>`).join('')}</table></div><div class="note"><span class="t-send">青</span>＝送信者、<span class="t-recv">紫</span>＝受信者だったセット</div></div>`;
+ return topBar()+head+list+sets+(V.host?`<button class="primary big" data-act="start">もう一度（全${M.sets}セット）</button><button class="big" data-act="lobby">待機室に戻る</button><div class="foot"><button class="ghost" data-act="stats">戦績を見る</button></div>`:'<div class="note center" style="margin-top:14px">ホストの操作を待っています</div><div class="foot"><button class="ghost" data-act="stats">戦績を見る</button></div>');
 }
 function gameHtml(){
  const g=V.g,ph=V.phase;
- let h=topBar(`<span class="sub">G${V.gameNo}・R${Math.min(g.round+1,3)}/3</span>`);
+ let h=topBar(`<span class="sub">${g.alpha?'ABC・':''}S${V.match.cur}/${V.match.sets}・R${Math.min(g.round+1,3)}/3</span>`);
  h+=stickyHtml(g);
  h+=roleCard(g);
  h+=phaseHtml(g);
  h+=`<div class="card"><h3>単語リスト</h3>${wordGrid(g)}</div>`;
- if(!(ph==='compose'&&g.role==='sender'))h+=`<div class="card"><h3><span>使える文字</span><span>残り ${KANA.length-g.used.length}/${KANA.length}</span></h3>${kanaBoard(g,false)}</div>`;
+ if(!(ph==='compose'&&g.role==='sender'))h+=`<div class="card"><h3><span>使える文字</span><span>残り ${CS(g).length-g.used.length}/${CS(g).length}</span></h3>${kanaBoard(g,false)}</div>`;
  h+=`<div class="card"><h3>暗号の履歴</h3>${historyHtml(g)}</div>`;
  h+=`<div class="card"><h3><span>プレイヤー</span><span>累計</span></h3>${playerList()}</div>`;
  if(V.host&&ph!=='result')h+=`<div class="foot"><button class="ghost small" data-act="abort">このゲームを中断して待機室へ</button></div>`;
  return h;
 }
 function modalHtml(){
- if(local.modal==='rules')return `<div class="modal" data-act="close"><div class="sheet" data-stop="1"><h3>ルール <button class="ghost small" data-act="close">閉じる</button></h3><ul>
- <li>送信者と受信者のペアが、傍受者に見破られないように3つの単語を伝えるゲーム。</li>
- <li>ペアにだけ「鍵」（20種類の条件から1つ）が知らされる。鍵とペアは3ラウンド共通。</li>
- <li>送信者は28語の単語リストから指定された1語を、鍵に沿ったひらがなの暗号で伝える。</li>
- <li>暗号に使えるのは50音の46文字。一度使った文字は使用済みになる。同じ暗号内での重複も不可。濁点・半濁点・小文字は元の文字を消費、「ー」は自由。</li>
- <li>暗号が届いたら60秒以内に送信者以外が回答し、一斉にオープン。</li>
- <li>受信者が外したら送信者は暗号を作り直す。受信者が当てるまで続き、使う文字はどんどん増える。</li>
- <li>当てた傍受者は答えを伏せたまま得点。そのラウンドはもう回答しない。</li>
- <li>受信者が当てて次のラウンドへ進むとき、単語リストが新しい28語に入れ替わり、使用済みの文字のうちランダムな半分（端数切り捨て）が復活する。</li>
- <li>文字を使い切って3語伝えられなければペアの負け。</li>
- <li>最後に傍受者は鍵を推理する。</li>
- <li><b>傍受者</b>：解読した数が得点。鍵を当てると2倍。</li>
- <li><b>ペア</b>：鍵を外した人数 − 当てた人数 が2人それぞれの得点。負けたら0点。</li>
- <li>1ゲームごとにペアが交代。累計得点で競う。</li></ul></div></div>`;
+ if(local.modal==='rules')return `<div class="modal" data-act="close"><div class="sheet rules" data-stop="1"><h3>ルール <button class="ghost small" data-act="close">閉じる</button></h3>
+ <p class="lead">送信者は<b>鍵</b>を使った暗号で、<b>受信者だけ</b>にお題の単語を伝える。<br>スパイは暗号を盗み見て、単語と鍵を見破れ。</p>
+ <div class="rsec"><div class="rh">役割</div><ul>
+  <li><span class="tag t-send">送信者</span> 鍵を選び、暗号を作る</li>
+  <li><span class="tag t-recv">受信者</span> 鍵を知っている。暗号から単語を当てる</li>
+  <li><span class="tag t-inter">スパイ</span> 鍵を知らない。単語と鍵を推理する</li></ul></div>
+ <div class="rsec"><div class="rh">1セットの流れ（3ラウンド）</div><ol>
+  <li>送信者が4つの候補から<b>鍵</b>を1つ選ぶ（鍵は受信者にだけ見える）</li>
+  <li>送信者が、28語のリストからお題の単語を<b>ひらがなの暗号</b>で送る</li>
+  <li>送信者以外が60秒以内に単語を選び、一斉に答え合わせ</li>
+  <li>受信者が外したら暗号を作り直す。当たれば次のラウンドへ</li>
+  <li>3ラウンド後、スパイが鍵を推理する</li></ol></div>
+ <div class="rsec"><div class="rh">暗号の文字</div><ul>
+  <li>使えるのは五十音(47文字)。長音「ー」も含む。<b>一度使った文字は使えなくなる</b>（同じ暗号内の重複も不可）</li>
+  <li>濁点・小文字は元の文字を使う。長音「ー」も1文字として使う</li>
+  <li>ラウンドが進むと、使った文字の半分が復活し、単語リストも入れ替わる</li>
+  <li>文字を使い切ったらペアの負け</li>
+  <li><b>アルファベット版</b>（ルーム設定で選択）：アルファベット(26文字)をQWERTY配列のキーボードで使う。ローマ字や英単語で暗号を作る。お題・鍵は同じ</li></ul></div>
+ <div class="rsec"><div class="rh">得点</div><ul>
+  <li><b>スパイ</b>：当てた単語の数。鍵も当てれば<b>2倍</b></li>
+  <li><b>送信者・受信者</b>：鍵を外したスパイの数 − 当てた数（負けたら0点）</li>
+  <li>ルーム設定「正解を伏せる」がオンなら、受信者が当てた単語はスパイには伏せられる（当てたスパイには見える）。全部わかるのはセット終了時</li></ul></div>
+ <div class="rsec"><div class="rh">勝敗</div><p class="sub" style="margin:0">セット数はホストが決める。セットごとにペアはランダムで交代し、全セットの合計得点で順位を競う。</p></div>
+ </div></div>`;
+ if(local.modal==='stats')return statsHtml();
+ if(local.modal==='avatar'&&V){
+  const mine=(V.players.find(p=>p.id===V.me)||{}).a;
+  return `<div class="modal" data-act="close"><div class="sheet" data-stop="1"><h3>アイコンを選ぶ <button class="ghost small" data-act="close">閉じる</button></h3><div class="note" style="margin:0 0 6px">ほかのプレイヤーが使っているアイコンは選べません</div><div class="avgrid">${ANIMALS.map((an,i)=>{
+   const owner=V.players.find(p=>p.a===i&&p.id!==V.me);
+   return `<button class="avopt ${mine===i?'cur':''}" data-act="avset" data-a="${i}" ${owner?'disabled':''}><span class="av">${animalSvg(i)}</span>${esc(an.n)}${owner?`<span class="who2">${esc(owner.name)}</span>`:''}</button>`;}).join('')}</div></div></div>`;
+ }
  if(local.modal==='keys')return `<div class="modal" data-act="close"><div class="sheet" data-stop="1"><h3>鍵リスト（20種） <button class="ghost small" data-act="close">閉じる</button></h3><div class="note" style="margin:0 0 8px">${ktag(KEYS[0])} 単語の<b>読み（ひらがな）</b>を使う鍵。カタカナ語もひらがなで考える。<br>${ktag(KEYS[10])} 単語から<b>連想</b>する鍵。<br>どの鍵も、送信者が条件に合う言葉を自由に選べる。</div><div class="keys">${KEYS.map((k,i)=>`<div class="keyitem" style="padding:6px 0;border-bottom:1px solid var(--line)"><span class="no">${i+1}</span>${ktag(k)}<span>${esc(k.n)}</span><span class="ex">${esc(k.ex)}</span></div>`).join('')}</div></div></div>`;
  return '';
 }
@@ -776,16 +1517,30 @@ $app.addEventListener('click',e=>{
   if(!name){lmsg('名前を入力してください');return;}
   try{localStorage.setItem('angoName',name);}catch(err){}
   if(code==='TEST'){startTest(name);return;}
+  try{localStorage.removeItem('angoHost');localStorage.removeItem('angoJoin');}catch(err){}
   if(A==='create')hostRoom(name,code||randCode());
   else{if(!code){lmsg('ルームコードを入力してください');return;}joinRoom(name,code);}
   return;
  }
- if(A==='rules'||A==='keys'){local.modal=A;render();return;}
+ if(A==='resumehost'){const sv=savedSess().host;if(sv)hostRoom('',sv.code,sv);return;}
+ if(A==='resumejoin'){const sv=savedSess().join;if(sv)joinRoom(sv.name,sv.code);return;}
+ if(A==='forget'){try{localStorage.removeItem('angoHost');localStorage.removeItem('angoJoin');}catch(err){}renderLobby();return;}
+ if(A==='rules'||A==='keys'||A==='stats'){local.modal=A;render();return;}
+ if(A==='statreset'){if(confirm('戦績をすべてリセットしますか？')){try{localStorage.removeItem('angoStats');}catch(err){}render();}return;}
  if(A==='close'){local.modal=null;render();return;}
  if(!V)return;
  const g=V.g;
  switch(A){
  case 'start':act({t:'start'});break;
+ case 'sets':act({t:'sets',n:+el.dataset.n});break;
+ case 'hide':act({t:'hide',on:el.checked});break;
+ case 'alpha':act({t:'alpha',on:el.dataset.on==='1'});break;
+ case 'final':act({t:'final'});break;
+ case 'lobby':act({t:'lobby'});break;
+ case 'addbot':act({t:'addbot'});break;
+ case 'rmbot':act({t:'rmbot',id:el.dataset.id});break;
+ case 'avmodal':local.modal='avatar';render();break;
+ case 'avset':act({t:'avatar',a:+el.dataset.a});local.modal=null;render();break;
  case 'pick':act({t:'pick',role:el.dataset.role,id:el.dataset.id||null});break;
  case 'abort':if(confirm('このゲームを中断しますか？（得点は加算されません）'))act({t:'abort'});break;
  case 'tile':SE.tap();if(local.buf.length<20)local.buf.push(el.dataset.k);render();break;
@@ -793,10 +1548,11 @@ $app.addEventListener('click',e=>{
  case 'small':if(local.buf.length){const i=local.buf.length-1;local.buf[i]=toggleSmall(local.buf[i]);SE.tap();render();}break;
  case 'bar':if(local.buf.length&&local.buf.length<20){local.buf.push('ー');SE.tap();render();}break;
  case 'bs':local.buf.pop();render();break;
- case 'send':if(local.buf.some(c=>c!=='ー'))act({t:'cipher',text:local.buf.join('')});break;
+ case 'send':if(local.buf.length)act({t:'cipher',text:local.buf.join('')});break;
  case 'word':local.sel=+el.dataset.i;SE.tap();render();break;
  case 'decide':if(local.sel!=null)act({t:'answer',i:local.sel});break;
  case 'keysel':local.keySel=+el.dataset.i;SE.tap();render();break;
+ case 'kpick':act({t:'keypick',k:+el.dataset.k});break;
  case 'keydecide':if(local.keySel!=null)act({t:'keyguess',i:local.keySel});break;
  }
 });
