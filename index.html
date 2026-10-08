@@ -936,7 +936,7 @@ function viewFor(pid){
    const knows=fin||pair||!(H.settings&&H.settings.hide)||atts.some(a=>a.res[pid]&&a.res[pid].ok);
    return {done,
    target:(done&&knows)?g.targets[r]:null,
-   atts:atts.map(a=>{const res={};for(const id in a.res){const x=a.res[id];res[id]={ok:x.ok,ans:(x.ok&&id!==pid&&!knows)?-1:x.ans};}return {cipher:a.cipher,res};})
+   atts:atts.map(a=>{const res={};for(const id in a.res){const x=a.res[id];res[id]={ok:x.ok,ans:(x.ok&&id!==pid&&!fin&&(id!==g.receiverId||!knows))?-1:x.ans};}return {cipher:a.cipher,res};})
   };}),
   cipher:H.phase==='answer'?g.curCipher:null,
   answerers:H.phase==='answer'?answerers(g):H.phase==='keyguess'?interceptors(g):[],
@@ -1479,7 +1479,8 @@ function modalHtml(){
  <div class="rsec"><div class="rh">得点</div><ul>
   <li><b>スパイ</b>：当てた単語の数。鍵も当てれば<b>2倍</b></li>
   <li><b>送信者・受信者</b>：鍵を外したスパイの数 − 当てた数（負けたら0点）</li>
-  <li>ルーム設定「正解を伏せる」がオンなら、受信者が当てた単語はスパイには伏せられる（当てたスパイには見える）。全部わかるのはセット終了時</li></ul></div>
+  <li>スパイが当てた答えは、どの設定でも本人以外には伏せられる</li>
+  <li>ルーム設定「正解を伏せる」がオンなら、受信者が当てた単語もスパイには伏せられる（当てたスパイには見える）。全部わかるのはセット終了時</li></ul></div>
  <div class="rsec"><div class="rh">勝敗</div><p class="sub" style="margin:0">セット数はホストが決める。セットごとにペアはランダムで交代し、全セットの合計得点で順位を競う。</p></div>
  </div></div>`;
  if(local.modal==='stats')return statsHtml();
